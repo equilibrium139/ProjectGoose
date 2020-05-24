@@ -12,7 +12,7 @@ Goose::Goose(const sf::RenderWindow& in_window)
 	sprite.setOrigin({ bounds.width / 2.0f, bounds.height / 2.0f });
 }
 
-void Goose::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void Goose::draw(sf::RenderTarget& target, sf::RenderStates states) const 
 {
 	target.draw(sprite, states);
 }

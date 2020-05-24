@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Goose.h"
+#include "ScrollingBackground.h"
 
 class Game
 {
@@ -19,4 +20,5 @@ private:
 	sf::Clock frameTimer;
 	float dt = 0.0f;
 	Goose player;
+	ScrollingBackground background;
 };
