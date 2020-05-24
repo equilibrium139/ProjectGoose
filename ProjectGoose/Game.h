@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Goose.h"
+
 class Game
 {
 public:
@@ -14,4 +16,7 @@ private:
 	sf::RenderWindow& wnd;
 
 	// Game variables
+	sf::Clock frameTimer;
+	float dt = 0.0f;
+	Goose player;
 };

@@ -7,6 +7,8 @@ int main()
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Project Goose", sf::Style::Titlebar | sf::Style::Close);
     Game game(window);
 
+	sf::Clock frameTimer;
+
     while (window.isOpen())
     {
 		PollEvents(window);
