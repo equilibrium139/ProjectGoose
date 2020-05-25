@@ -8,7 +8,7 @@ public:
 	Animation(const sf::Texture& sheet, int nFrames, int nRows, int nColumns, float framesPerSecond = 6.0f);
 	void Update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-	sf::FloatRect GetBounds() { return getTransform().transformRect(sprite.getLocalBounds()); }
+	sf::FloatRect GetBounds() const { return getTransform().transformRect(sprite.getLocalBounds()); }
 private:
 	void GoNextFrame();
 private:
