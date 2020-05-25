@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "Animation.h"
 #include "ResourceHolder.h"
+#include "Shooter.h"
 
 class Goose : public sf::Drawable
 {
@@ -19,6 +20,7 @@ private:
 	Animation animation;
 	float scale = 0.1f;
 	float speed = 100.0f;
+	Shooter shooter;
 	//float animationChangeTime = 1.0f / 6.0f; // 6 frames per second
 	//float timeSinceLastAnimationChange = 0.0f;
 	//int currentFrame = 0;

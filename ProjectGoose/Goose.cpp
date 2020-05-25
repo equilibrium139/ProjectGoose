@@ -17,6 +17,7 @@ void Goose::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	//target.draw(sprite, states);
 	target.draw(animation, states);
+	shooter.DrawPoops(target);
 }
 
 void Goose::Update(float dt)
@@ -52,6 +53,12 @@ void Goose::Update(float dt)
 	ClampToWindow();
 
 	animation.Update(dt);
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	{
+		shooter.AttemptShot(animation.getPosition() - sf::Vector2f(animation.GetBounds().width / 2.0f, -animation.GetBounds().height / 2.0f));
+	}
+	shooter.Update(dt);
 }
 
 void Goose::ClampToWindow()
