@@ -6,11 +6,12 @@
 class Shooter
 {
 public:
-	explicit Shooter(float cooldown = 1.0f);
+	explicit Shooter(const sf::RenderWindow& wnd, float cooldown = 1.0f);
 	void AttemptShot(sf::Vector2f position);
 	void Update(float dt);
 	void DrawPoops(sf::RenderTarget& target) const;
 private:
+	float screenBottom;
 	float cd;
 	float timeSinceLastShot;
 	std::vector<Poop> poops;

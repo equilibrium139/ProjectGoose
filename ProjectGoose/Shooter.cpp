@@ -1,7 +1,10 @@
 #include "Shooter.h"
+#include <iostream>
 
-Shooter::Shooter(float cooldown)
-	:cd(cooldown), timeSinceLastShot(std::numeric_limits<float>::max())
+const sf::Color Poop::color = sf::Color(122, 89, 1);
+
+Shooter::Shooter(const sf::RenderWindow& wnd, float cooldown)
+	:screenBottom(wnd.getView().getSize().y), cd(cooldown), timeSinceLastShot(std::numeric_limits<float>::max())
 {
 }
 
@@ -17,10 +20,15 @@ void Shooter::AttemptShot(sf::Vector2f position)
 void Shooter::Update(float dt)
 {
 	timeSinceLastShot += dt;
-	for (auto& poop : poops)
-	{
-		poop.Update(dt);
-	}
+	poops.erase(
+		std::remove_if(poops.begin(), poops.end(),
+			[dt, this](Poop& poop) {
+				poop.Update(dt);
+				std::cout << poops.size() << '\n';
+				return poop.circle.getGlobalBounds().top > screenBottom;
+			}),
+		poops.end()
+	);
 }
 
 void Shooter::DrawPoops(sf::RenderTarget& target) const

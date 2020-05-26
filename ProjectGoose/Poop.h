@@ -9,7 +9,7 @@ struct Poop : public sf::Drawable
 		auto circleCenter = circle.getRadius() / 2.0f;
 		circle.setOrigin(circleCenter, circleCenter);
 		circle.setPosition(position);
-		circle.setFillColor({ 122, 89, 1 });
+		circle.setFillColor(color);
 	}
 	void Update(float dt)
 	{
@@ -20,5 +20,6 @@ struct Poop : public sf::Drawable
 		target.draw(circle, states);
 	}
 	sf::CircleShape circle = sf::CircleShape(5.0f);
+	static const sf::Color color;
 	float speed = 300.0f;
 };

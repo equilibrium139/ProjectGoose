@@ -3,7 +3,7 @@
 
 Goose::Goose(ResourceHolder& resourceHolder, const sf::RenderWindow& in_window)
 	:texture(resourceHolder.GetTexture("Assets/Textures/gooseSpritesheet.png")), 
-	 animation(texture, 3, 3, 1), window(in_window)
+	 animation(texture, 3, 3, 1), window(in_window), shooter(in_window)
 {
 	/*sprite.setTexture(texture);
 	sprite.setTextureRect({ 0, currentFrame * (int)texture.getSize().y / 3, (int)texture.getSize().x, (int)texture.getSize().y / 3 });
@@ -56,7 +56,9 @@ void Goose::Update(float dt)
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 	{
-		shooter.AttemptShot(animation.getPosition() - sf::Vector2f(animation.GetBounds().width / 2.0f, -animation.GetBounds().height / 2.0f));
+		auto bounds = animation.GetBounds();
+		sf::Vector2f offset = sf::Vector2f(animation.getScale().x > 0 ? -bounds.width / 2.0f : bounds.width / 2.0f, bounds.height / 2.0f);
+		shooter.AttemptShot(animation.getPosition() + offset);
 	}
 	shooter.Update(dt);
 }
