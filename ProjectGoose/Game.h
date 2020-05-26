@@ -6,6 +6,7 @@
 #include "ScrollingBackground.h"
 #include "ResourceHolder.h"
 #include "Zombie.h"
+#include "ZombieSpawner.h"
 
 class Game
 {
@@ -16,6 +17,7 @@ private:
 	void Update();
 	void Draw();
 	void SetWindowView();
+	void DetectCollisions();
 private:
 	sf::RenderWindow& wnd;
 
@@ -25,5 +27,7 @@ private:
 	ResourceHolder resourceHolder;
 	Goose player;
 	ScrollingBackground background;
-	Zombie zombie;
+	ZombieSpawner zombieSpawner;
+	float collisionCheckInterval = 1.0f / 24.0f; // check for collision 24 times a second
+	float timeSinceLastCheckedCollision = std::numeric_limits<float>::max();
 };

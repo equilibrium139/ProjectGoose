@@ -63,6 +63,29 @@ void Goose::Update(float dt)
 	shooter.Update(dt);
 }
 
+void Goose::DetectCollisions(ZombieSpawner& zombieSpawner)
+{
+	auto& zombies = zombieSpawner.GetZombies();
+	auto& poops = shooter.GetPoops();
+	auto myBounds = GetBounds();
+	for (const auto& zombie : zombies)
+	{
+		auto zombieBounds = zombie.GetBounds();
+		if (myBounds.intersects(zombieBounds))
+		{
+			TakeDamage();
+		}
+		bool zombieHit = std::any_of(poops.begin(), poops.end(),
+			[&zombieBounds](const Poop& poop) {
+				return zombieBounds.intersects(poop.GetBounds());
+			});
+		if (zombieHit)
+		{
+			zombie.TakeDamage();
+		}
+	}
+}
+
 void Goose::ClampToWindow()
 {
 	auto bounds = animation.GetBounds();

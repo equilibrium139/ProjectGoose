@@ -2,12 +2,13 @@
 
 #include <iostream>
 
-Zombie::Zombie(ResourceHolder& resourceHolder, sf::RenderWindow& wnd)
+Zombie::Zombie(sf::Vector2f spawnPosition, ResourceHolder& resourceHolder, const sf::RenderWindow& wnd)
 	:maleWalkSheet(resourceHolder.GetTexture("Assets/Textures/maleZombieAttack.png")), 
 	 maleWalk(maleWalkSheet, 8, 2, 4, 10)
 {
 	maleWalk.scale(-0.15f, 0.15f);
-	maleWalk.setPosition(wnd.getSize().x, wnd.getView().getSize().y - 200.0f);
+	// maleWalk.setPosition(wnd.getSize().x, wnd.getView().getSize().y - 200.0f);
+	maleWalk.setPosition(spawnPosition);
 }
 
 void Zombie::Update(float dt)
@@ -32,4 +33,13 @@ void Zombie::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	rect.setOutlineThickness(5.0f);*/
 	target.draw(maleWalk, states);
 	// target.draw(rect, states);
+}
+
+void Zombie::TakeDamage() const
+{
+	std::cout << "Ouch\n";
+	if (--hitPoints <= 0)
+	{
+		state = State::Dying;
+	}
 }

@@ -5,9 +5,10 @@ Game::Game(sf::RenderWindow& window)
 	:wnd(window),
 	player(resourceHolder, wnd),
 	background("Assets/Textures/background.jpg", wnd),
-	zombie(resourceHolder, wnd)
+	zombieSpawner(resourceHolder, wnd)
 {
 	SetWindowView();
+	zombieSpawner.SetSpawnPosition({ wnd.getView().getSize().x + 10.0f, wnd.getView().getSize().y - 150.0f });
 }
 
 void Game::SetWindowView()
@@ -21,9 +22,19 @@ void Game::SetWindowView()
 	std::cout << wnd.getView().getSize().x << '\n';
 }
 
+void Game::DetectCollisions()
+{
+	player.DetectCollisions(zombieSpawner);
+}
+
 
 void Game::Go()
 {
+	if (timeSinceLastCheckedCollision > collisionCheckInterval)
+	{
+		DetectCollisions();
+		timeSinceLastCheckedCollision = 0.0f;
+	}
 	Update();
 	Draw();
 }
@@ -32,14 +43,16 @@ void Game::Update()
 {
 	dt = frameTimer.restart().asSeconds();
 
+	timeSinceLastCheckedCollision += dt;
+
 	player.Update(dt);
 	background.Update(dt);
-	zombie.Update(dt);
+	zombieSpawner.Update(dt);
 }
 
 void Game::Draw()
 {
 	wnd.draw(background);
-	wnd.draw(zombie);
+	zombieSpawner.DrawZombies(wnd);
 	wnd.draw(player);
 }

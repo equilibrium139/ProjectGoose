@@ -24,7 +24,6 @@ void Shooter::Update(float dt)
 		std::remove_if(poops.begin(), poops.end(),
 			[dt, this](Poop& poop) {
 				poop.Update(dt);
-				std::cout << poops.size() << '\n';
 				return poop.circle.getGlobalBounds().top > screenBottom;
 			}),
 		poops.end()

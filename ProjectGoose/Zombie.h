@@ -8,10 +8,10 @@
 class Zombie : public sf::Drawable
 {
 public:
-	Zombie(ResourceHolder& resourceHolder, sf::RenderWindow& window);
+	Zombie(sf::Vector2f spawnPosition, ResourceHolder& resourceHolder, const sf::RenderWindow& window);
 	void Update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-
+	void TakeDamage() const;
 	enum class State
 	{
 		Walking,
@@ -19,8 +19,8 @@ public:
 		Dying,
 		Dead
 	};
-
 	State GetState() const { return state; }
+	sf::FloatRect GetBounds() const { return maleWalk.GetBounds(); }
 private:
 	sf::Texture& maleWalkSheet;
 	Animation maleWalk;
@@ -31,5 +31,6 @@ private:
 	//const int nRows = 3;
 	//const int nColumns = 4;
 	float speed = 100.0f;
-	State state = State::Walking;
+	mutable State state = State::Walking;
+	mutable int hitPoints = 3;
 };
