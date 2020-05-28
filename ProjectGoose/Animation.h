@@ -12,15 +12,17 @@ public:
 	void Update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	sf::FloatRect GetBounds() const { return sprite.getLocalBounds(); }
-	bool Done() { return !loop && currentFrame == nFrames - 1; }
+	bool Done() { return !loop && currentFrame == spriteSheet.nFrames - 1; }
 private:
 	void GoNextFrame();
 private:
-	const sf::Texture& sheet;
+	// const sf::Texture& sheet;
+	SpriteSheet spriteSheet;
 	sf::Sprite sprite;
-	const int nFrames;
+	/*const int nFrames;
 	const int nColumns;
 	const int nRows;
+	*/
 	const int width;
 	const int height;
 	float frameDuration;
