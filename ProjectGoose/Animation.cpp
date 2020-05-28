@@ -8,6 +8,11 @@ Animation::Animation(const sf::Texture& sheet, int nFrames, int nRows, int nColu
 	sprite.setTextureRect(sf::IntRect(0, 0, width, height));
 }
 
+Animation::Animation(const SpriteSheet& spriteSheet, float framesPerSecond, bool loop)
+	:Animation(spriteSheet.sheet, spriteSheet.nFrames, spriteSheet.rows, spriteSheet.columns, framesPerSecond, loop)
+{
+}
+
 void Animation::Update(float dt)
 {
 	frameDurationSoFar += dt;

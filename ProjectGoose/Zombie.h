@@ -1,5 +1,8 @@
 #pragma once
 
+#include <random>
+#include <variant>
+
 #include <SFML/Graphics.hpp>
 
 #include "Animation.h"
@@ -14,18 +17,33 @@ public:
 	void TakeDamage() const;
 	enum class State
 	{
-		Walking,
+		Moving,
 		Attacking,
 		Dying,
 		Dead
 	};
 	State GetState() const { return state; }
-	sf::FloatRect GetBounds() const { return transform.getTransform().transformRect(maleWalk.GetBounds()); }
+	sf::FloatRect GetBounds() const { return transform.getTransform().transformRect(walk.GetBounds()); }
 private:
-	Animation maleWalk;
-	Animation maleDeath;
+	bool CoinFlip() const
+	{
+		static std::random_device rd;
+		static std::mt19937 rng(rd());
+		static std::uniform_int_distribution<int> flip(0, 1);
+		return flip(rng) == 0;
+	}
+private:
+	bool male = CoinFlip();
+	Animation walk;
+	Animation death;
+	const static SpriteSheet maleWalk;
+	const static SpriteSheet maleDeath;
+	const static SpriteSheet femaleWalk;
+	const static SpriteSheet femaleDeath;
+	/*Animation maleWalk;
+	Animation maleDeath;*/
 	sf::Transformable transform;
 	float speed = 100.0f;
-	mutable State state = State::Walking;
+	mutable State state = State::Moving;
 	mutable int hitPoints = 3;
 };

@@ -173,6 +173,7 @@
     <ClInclude Include="ResourceHolder.h" />
     <ClInclude Include="ScrollingBackground.h" />
     <ClInclude Include="Shooter.h" />
+    <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="Zombie.h" />
     <ClInclude Include="ZombieSpawner.h" />
