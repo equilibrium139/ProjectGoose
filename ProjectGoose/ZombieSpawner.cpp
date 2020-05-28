@@ -1,4 +1,5 @@
 #include "ZombieSpawner.h"
+#include <iostream>
 
 ZombieSpawner::ZombieSpawner(ResourceHolder& resourceHolder, const sf::RenderWindow& window, sf::Vector2f spawnPos )
 	:spawnPosition(spawnPos), timeSinceLastSpawned(std::numeric_limits<float>::max()),
@@ -15,10 +16,14 @@ void ZombieSpawner::Update(float dt)
 		timeSinceLastSpawned = 0.0f;
 	}
 
-	for (auto& zombie : zombies)
-	{
-		zombie.Update(dt);
-	}
+	zombies.erase(
+		std::remove_if(zombies.begin(), zombies.end(),
+			[dt](Zombie& zombie) {
+				zombie.Update(dt);
+				return zombie.GetState() == Zombie::State::Dead;
+			}),
+		zombies.end()
+	);
 }
 
 void ZombieSpawner::DrawZombies(sf::RenderTarget& target)

@@ -3,12 +3,13 @@
 #include <iostream>
 
 Zombie::Zombie(sf::Vector2f spawnPosition, ResourceHolder& resourceHolder, const sf::RenderWindow& wnd)
-	:maleWalkSheet(resourceHolder.GetTexture("Assets/Textures/maleZombieAttack.png")), 
-	 maleWalk(maleWalkSheet, 8, 2, 4, 10)
+	:maleWalk(resourceHolder.GetTexture("Assets/Textures/maleZombieAttack.png"), 8, 2, 4, 10),
+     maleDeath(resourceHolder.GetTexture("Assets/Textures/maleZombieDeath.png"), 12, 1, 12, 10, false)
 {
-	maleWalk.scale(-0.15f, 0.15f);
-	// maleWalk.setPosition(wnd.getSize().x, wnd.getView().getSize().y - 200.0f);
-	maleWalk.setPosition(spawnPosition);
+	transform.setScale(-0.15f, 0.15f); // mirror and scale down
+	auto bounds = maleWalk.GetBounds();
+	transform.setPosition(spawnPosition);
+
 }
 
 void Zombie::Update(float dt)
@@ -16,22 +17,32 @@ void Zombie::Update(float dt)
 	switch (state)
 	{
 	case State::Walking:
-		maleWalk.move(sf::Vector2f(-1.0f, 0.0f) * speed * dt);
+		transform.move(sf::Vector2f(-1.0f, 0.0f) * speed * dt);
 		maleWalk.Update(dt);
+		break;
+	case State::Dying:
+		maleDeath.Update(dt);
+		if (maleDeath.Done())
+		{
+			state = State::Dead;
+		}
 		break;
 	}
 }
 
 void Zombie::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+	states.transform *= transform.getTransform();
 	auto bounds = maleWalk.GetBounds();
-	/*sf::RectangleShape rect({ bounds.width, bounds.height });
-	rect.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f);
-	rect.setPosition(sprite.getPosition());
-	rect.setFillColor(sf::Color::Transparent);
-	rect.setOutlineColor(sf::Color::Green);
-	rect.setOutlineThickness(5.0f);*/
-	target.draw(maleWalk, states);
+	switch (state)
+	{
+	case State::Walking:
+		target.draw(maleWalk, states);
+		break;
+	case State::Dying:
+		target.draw(maleDeath, states);
+		break;
+	}
 	// target.draw(rect, states);
 }
 

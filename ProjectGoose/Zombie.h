@@ -20,16 +20,16 @@ public:
 		Dead
 	};
 	State GetState() const { return state; }
-	sf::FloatRect GetBounds() const { return maleWalk.GetBounds(); }
+	sf::FloatRect GetBounds() const { return transform.getTransform().transformRect(maleWalk.GetBounds()); }
+
+	Zombie(const Zombie&) = default;
+	Zombie& operator=(const Zombie&) { return *this; }
+	Zombie(Zombie&&) = default;
+	Zombie& operator=(Zombie&&) { return *this; }
 private:
-	sf::Texture& maleWalkSheet;
 	Animation maleWalk;
-	//float animationChangeTime = 1.0f / 6.0f; // 6 frames per second
-	//float timeSinceLastAnimationChange = 0.0f;
-	//int currentFrame = 0;
-	//const int nFrames = 10;
-	//const int nRows = 3;
-	//const int nColumns = 4;
+	Animation maleDeath;
+	sf::Transformable transform;
 	float speed = 100.0f;
 	mutable State state = State::Walking;
 	mutable int hitPoints = 3;

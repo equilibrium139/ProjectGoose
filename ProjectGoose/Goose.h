@@ -16,14 +16,13 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	void Update(float dt);
 	void DetectCollisions(ZombieSpawner& zombieSpawner);
-	sf::FloatRect GetBounds() const { return animation.GetBounds(); }
+	sf::FloatRect GetBounds() const { return transform.getTransform().transformRect(animation.GetBounds()); }
 private:
 	void ClampToWindow();
 	void TakeDamage() { --hitPoints; std::cout << "Collided with zombie\n"; }
 private:
 	const sf::RenderWindow& window;
-	sf::Texture& texture;
-	/*sf::Sprite sprite;*/
+	sf::Transformable transform;
 	Animation animation;
 	float scale = 0.1f;
 	float speed = 150.0f;

@@ -2,34 +2,23 @@
 #include "Vec2.h"
 
 Goose::Goose(ResourceHolder& resourceHolder, const sf::RenderWindow& in_window)
-	:texture(resourceHolder.GetTexture("Assets/Textures/gooseSpritesheet.png")), 
-	 animation(texture, 3, 3, 1), window(in_window), shooter(in_window)
+	:animation(resourceHolder.GetTexture("Assets/Textures/gooseSpritesheet.png"), 3, 3, 1), window(in_window), shooter(in_window)
 {
-	/*sprite.setTexture(texture);
-	sprite.setTextureRect({ 0, currentFrame * (int)texture.getSize().y / 3, (int)texture.getSize().x, (int)texture.getSize().y / 3 });
-	sprite.setScale(scale, scale);
-	auto bounds = sprite.getLocalBounds();
-	sprite.setOrigin({ bounds.width / 2.0f, bounds.height / 2.0f });*/
-	animation.setScale(scale, scale);
+	auto bounds = animation.GetBounds();
+	transform.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f);
+	transform.setScale(scale, scale);
 }
 
 void Goose::draw(sf::RenderTarget& target, sf::RenderStates states) const 
 {
 	//target.draw(sprite, states);
+	states.transform *= transform.getTransform();
 	target.draw(animation, states);
 	shooter.DrawPoops(target);
 }
 
 void Goose::Update(float dt)
 {
-	/*timeSinceLastAnimationChange += dt;
-	if (timeSinceLastAnimationChange >= animationChangeTime)
-	{
-		currentFrame++;
-		currentFrame %= nFrames;
-		sprite.setTextureRect({ 0, currentFrame * (int)texture.getSize().y / 3, (int)texture.getSize().x, (int)texture.getSize().y / 3 });
-		timeSinceLastAnimationChange = 0.0f;
-	}*/
 	Vec2f moveVec;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
@@ -42,27 +31,29 @@ void Goose::Update(float dt)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
 		moveVec.x -= 1.0f;
-		animation.setScale(-scale, scale);
+		transform.setScale(-scale, scale);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
 		moveVec.x += 1.0f;
-		animation.setScale(scale, scale);
+		transform.setScale(scale, scale);
 	}
-	animation.move(moveVec.Normalize() * speed * dt);
+	transform.move(moveVec.Normalize() * speed * dt);
 	ClampToWindow();
 
 	animation.Update(dt);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 	{
-		auto bounds = animation.GetBounds();
-		sf::Vector2f offset = sf::Vector2f(animation.getScale().x > 0 ? -bounds.width / 2.0f : bounds.width / 2.0f, bounds.height / 2.0f);
-		shooter.AttemptShot(animation.getPosition() + offset);
+		auto bounds = GetBounds();
+		// offset to the butt area of the goose. Different depending on which direction it's facing
+		sf::Vector2f offset = sf::Vector2f(transform.getScale().x > 0 ? -bounds.width / 2.0f : bounds.width / 2.0f, bounds.height / 2.0f);
+		shooter.AttemptShot(transform.getPosition() + offset);
 	}
 	shooter.Update(dt);
 }
 
+// Detects if the goose is colliding with any zombies, or if any zombies got hit by poop
 void Goose::DetectCollisions(ZombieSpawner& zombieSpawner)
 {
 	auto& zombies = zombieSpawner.GetZombies();
@@ -70,44 +61,49 @@ void Goose::DetectCollisions(ZombieSpawner& zombieSpawner)
 	auto myBounds = GetBounds();
 	for (const auto& zombie : zombies)
 	{
-		auto zombieBounds = zombie.GetBounds();
-		if (myBounds.intersects(zombieBounds))
+		if (zombie.GetState() != Zombie::State::Dying && zombie.GetState() != Zombie::State::Dead)
 		{
-			TakeDamage();
-		}
-		bool zombieHit = std::any_of(poops.begin(), poops.end(),
-			[&zombieBounds](const Poop& poop) {
-				return zombieBounds.intersects(poop.GetBounds());
-			});
-		if (zombieHit)
-		{
-			zombie.TakeDamage();
+			auto zombieBounds = zombie.GetBounds();
+			if (myBounds.intersects(zombieBounds))
+			{
+				TakeDamage();
+			}
+			bool zombieHit = std::any_of(poops.begin(), poops.end(),
+				[&zombieBounds](const Poop& poop) {
+					bool collided = zombieBounds.intersects(poop.GetBounds());
+					if (collided) { poop.collided = true; }
+					return collided;
+				});
+			if (zombieHit)
+			{
+				zombie.TakeDamage();
+			}
 		}
 	}
 }
 
 void Goose::ClampToWindow()
 {
-	auto bounds = animation.GetBounds();
+	auto bounds = transform.getTransform().transformRect(animation.GetBounds());
 
 	if (bounds.left < 0)
 	{
-		float spriteY = animation.getPosition().y;
-		animation.setPosition(bounds.width / 2.0f, spriteY);
+		float spriteY = transform.getPosition().y;
+		transform.setPosition(bounds.width / 2.0f, spriteY);
 	}
 	else if (bounds.left + bounds.width > window.getView().getSize().x)
 	{
-		float spriteY = animation.getPosition().y;
-		animation.setPosition(window.getView().getSize().x - (bounds.width / 2.0f), spriteY);
+		float spriteY = transform.getPosition().y;
+		transform.setPosition(window.getView().getSize().x - (bounds.width / 2.0f), spriteY);
 	}
 	if (bounds.top < 0)
 	{
-		float spriteX = animation.getPosition().x;
-		animation.setPosition(spriteX, bounds.height / 2.0f);
+		float spriteX = transform.getPosition().x;
+		transform.setPosition(spriteX, bounds.height / 2.0f);
 	}
 	else if (bounds.top + bounds.height > window.getView().getSize().y)
 	{
-		float spriteX = animation.getPosition().x;
-		animation.setPosition(spriteX, window.getView().getSize().y - (bounds.height / 2.0f));
+		float spriteX = transform.getPosition().x;
+		transform.setPosition(spriteX, window.getView().getSize().y - (bounds.height / 2.0f));
 	}
 }
