@@ -18,9 +18,13 @@ void ZombieSpawner::Update(float dt)
 
 	zombies.erase(
 		std::remove_if(zombies.begin(), zombies.end(),
-			[dt](Zombie& zombie) {
-				zombie.Update(dt);
-				return zombie.GetState() == Zombie::State::Dead;
+			[dt](auto& zombie) {
+				zombie->Update(dt);
+				if (zombie->GetState() == Zombie::State::Dead)
+				{
+					std::cout << "Break";
+				}
+				return zombie->GetState() == Zombie::State::Dead;
 			}),
 		zombies.end()
 	);
@@ -30,11 +34,11 @@ void ZombieSpawner::DrawZombies(sf::RenderTarget& target)
 {
 	for(const auto& zombie: zombies)
 	{
-		target.draw(zombie);
+		target.draw(*zombie);
 	}
 }
 
 void ZombieSpawner::SpawnZombie()
 {
-	zombies.emplace_back(spawnPosition, resourceHolder, window);
+	zombies.emplace_back(std::make_unique<Zombie>(spawnPosition, resourceHolder, window));
 }

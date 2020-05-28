@@ -21,11 +21,6 @@ public:
 	};
 	State GetState() const { return state; }
 	sf::FloatRect GetBounds() const { return transform.getTransform().transformRect(maleWalk.GetBounds()); }
-
-	Zombie(const Zombie&) = default;
-	Zombie& operator=(const Zombie&) { return *this; }
-	Zombie(Zombie&&) = default;
-	Zombie& operator=(Zombie&&) { return *this; }
 private:
 	Animation maleWalk;
 	Animation maleDeath;

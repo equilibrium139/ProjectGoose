@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include <SFML/System.hpp>
@@ -14,7 +15,7 @@ public:
 	void Update(float dt);
 	void DrawZombies(sf::RenderTarget& target);
 	void SetSpawnPosition(sf::Vector2f position) { spawnPosition = position; }
-	const std::vector<Zombie>& GetZombies() { return zombies; }
+	const auto& GetZombies() { return zombies; }
 private:
 	void SpawnZombie();
 private:
@@ -23,5 +24,5 @@ private:
 	sf::Vector2f spawnPosition;
 	ResourceHolder& resourceHolder;
 	const sf::RenderWindow& window;
-	std::vector<Zombie> zombies;
+	std::vector<std::unique_ptr<Zombie>> zombies;
 };

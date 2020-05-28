@@ -61,9 +61,9 @@ void Goose::DetectCollisions(ZombieSpawner& zombieSpawner)
 	auto myBounds = GetBounds();
 	for (const auto& zombie : zombies)
 	{
-		if (zombie.GetState() != Zombie::State::Dying && zombie.GetState() != Zombie::State::Dead)
+		if (zombie->GetState() != Zombie::State::Dying && zombie->GetState() != Zombie::State::Dead)
 		{
-			auto zombieBounds = zombie.GetBounds();
+			auto zombieBounds = zombie->GetBounds();
 			if (myBounds.intersects(zombieBounds))
 			{
 				TakeDamage();
@@ -76,7 +76,7 @@ void Goose::DetectCollisions(ZombieSpawner& zombieSpawner)
 				});
 			if (zombieHit)
 			{
-				zombie.TakeDamage();
+				zombie->TakeDamage();
 			}
 		}
 	}
