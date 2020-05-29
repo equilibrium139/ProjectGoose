@@ -19,6 +19,7 @@ void Animation::Update(float dt)
 	if (frameDurationSoFar > frameDuration)
 	{
 		GoNextFrame();
+		frameDurationSoFar = 0.0f;
 	}
 }
 
@@ -39,5 +40,4 @@ void Animation::GoNextFrame()
 	int row = currentFrame / spriteSheet.columns;
 	int column = currentFrame % spriteSheet.columns;
 	sprite.setTextureRect(sf::IntRect(column * width, row * height, width, height));
-	frameDurationSoFar = 0.0f;
 }

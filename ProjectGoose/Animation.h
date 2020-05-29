@@ -4,6 +4,7 @@
 
 #include "SpriteSheet.h"
 
+// Enables playing animations from spritesheets
 class Animation : public sf::Drawable
 {
 public:
@@ -16,13 +17,8 @@ public:
 private:
 	void GoNextFrame();
 private:
-	// const sf::Texture& sheet;
 	SpriteSheet spriteSheet;
 	sf::Sprite sprite;
-	/*const int nFrames;
-	const int nColumns;
-	const int nRows;
-	*/
 	const int width;
 	const int height;
 	float frameDuration;

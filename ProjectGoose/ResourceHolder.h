@@ -6,7 +6,6 @@
 class ResourceHolder
 {
 public:
+	ResourceHolder() = delete;
 	static sf::Texture& GetTexture(const std::string& path);
-private:
-	static std::unordered_map<std::string, sf::Texture> textures;
 };

@@ -3,12 +3,12 @@
 
 Game::Game(sf::RenderWindow& window)
 	:wnd(window),
-	player(resourceHolder, wnd),
+	player(wnd),
 	background("Assets/Textures/background.jpg", wnd),
 	zombieSpawner(wnd)
 {
 	SetWindowView();
-	zombieSpawner.SetSpawnPosition({ wnd.getView().getSize().x + 10.0f, wnd.getView().getSize().y - 150.0f });
+	zombieSpawner.SetSpawnPosition({ wnd.getView().getSize().x + 10.0f, wnd.getView().getSize().y - 175.0f });
 }
 
 void Game::SetWindowView()

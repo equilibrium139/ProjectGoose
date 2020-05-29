@@ -21,10 +21,8 @@ private:
 private:
 	sf::RenderWindow& wnd;
 
-	// Game variables
 	sf::Clock frameTimer;
 	float dt = 0.0f;
-	ResourceHolder resourceHolder;
 	Goose player;
 	ScrollingBackground background;
 	ZombieSpawner zombieSpawner;

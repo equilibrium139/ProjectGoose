@@ -12,7 +12,7 @@
 class Goose : public sf::Drawable
 {
 public:
-	Goose(ResourceHolder& resourceHolder, const sf::RenderWindow& window);
+	Goose(const sf::RenderWindow& window);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	void Update(float dt);
 	void DetectCollisions(ZombieSpawner& zombieSpawner);

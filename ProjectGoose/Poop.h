@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+
 #include <SFML/Graphics.hpp>
 
 struct Poop : public sf::Drawable
@@ -11,14 +13,8 @@ struct Poop : public sf::Drawable
 		target.draw(circle, states);
 	}
 	sf::FloatRect GetBounds() const { return circle.getGlobalBounds(); }
-	enum class State
-	{
-		Moving, 
-		Collided
-	};
 	sf::CircleShape circle = sf::CircleShape(5.0f);
 	static const sf::Color color;
 	static const float speed;
 	bool collided = false;
-	State state;
 };

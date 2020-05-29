@@ -1,8 +1,8 @@
 #include "Goose.h"
 #include "VectorUtilities.h"
 
-Goose::Goose(ResourceHolder& resourceHolder, const sf::RenderWindow& in_window)
-	:animation(resourceHolder.GetTexture("Assets/Textures/gooseSpritesheet.png"), 3, 3, 1), window(in_window), shooter(in_window)
+Goose::Goose(const sf::RenderWindow& in_window)
+	:animation(ResourceHolder::GetTexture("Assets/Textures/gooseSpritesheet.png"), 3, 3, 1), window(in_window), shooter(in_window)
 {
 	auto bounds = animation.GetBounds();
 	transform.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f);
