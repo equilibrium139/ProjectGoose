@@ -52,7 +52,7 @@ void Zombie::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	// target.draw(rect, states);
 }
 
-void Zombie::TakeDamage() const
+void Zombie::TakeDamage()
 {
 	std::cout << "Ouch\n";
 	if (--hitPoints <= 0)

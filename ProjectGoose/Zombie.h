@@ -14,7 +14,7 @@ public:
 	Zombie(sf::Vector2f spawnPosition, ResourceHolder& resourceHolder, const sf::RenderWindow& window);
 	void Update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-	void TakeDamage() const;
+	void TakeDamage();
 	enum class State
 	{
 		Moving,
@@ -44,6 +44,6 @@ private:
 	Animation maleDeath;*/
 	sf::Transformable transform;
 	float speed = 100.0f;
-	mutable State state = State::Moving;
-	mutable int hitPoints = 3;
+	State state = State::Moving;
+	int hitPoints = 3;
 };

@@ -174,7 +174,7 @@
     <ClInclude Include="ScrollingBackground.h" />
     <ClInclude Include="Shooter.h" />
     <ClInclude Include="SpriteSheet.h" />
-    <ClInclude Include="Vec2.h" />
+    <ClInclude Include="VectorUtilities.h" />
     <ClInclude Include="Zombie.h" />
     <ClInclude Include="ZombieSpawner.h" />
   </ItemGroup>

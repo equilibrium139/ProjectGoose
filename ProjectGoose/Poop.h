@@ -11,8 +11,14 @@ struct Poop : public sf::Drawable
 		target.draw(circle, states);
 	}
 	sf::FloatRect GetBounds() const { return circle.getGlobalBounds(); }
+	enum class State
+	{
+		Moving, 
+		Collided
+	};
 	sf::CircleShape circle = sf::CircleShape(5.0f);
 	static const sf::Color color;
-	float speed = 300.0f;
-	mutable bool collided = false;
+	static const float speed;
+	bool collided = false;
+	State state;
 };

@@ -1,6 +1,7 @@
 #include "Poop.h"
 
 const sf::Color Poop::color = sf::Color(122, 89, 1);
+const float Poop::speed = 300.0f;
 
 Poop::Poop(sf::Vector2f position)
 {

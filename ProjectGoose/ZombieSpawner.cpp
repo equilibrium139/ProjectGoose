@@ -1,7 +1,7 @@
 #include "ZombieSpawner.h"
 #include <iostream>
 
-ZombieSpawner::ZombieSpawner(ResourceHolder& resourceHolder, const sf::RenderWindow& window, sf::Vector2f spawnPos )
+ZombieSpawner::ZombieSpawner(const sf::RenderWindow& window, sf::Vector2f spawnPos )
 	:spawnPosition(spawnPos), timeSinceLastSpawned(std::numeric_limits<float>::max()),
 	resourceHolder(resourceHolder), window(window)
 {

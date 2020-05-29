@@ -10,7 +10,7 @@ public:
 	void AttemptShot(sf::Vector2f position);
 	void Update(float dt);
 	void DrawPoops(sf::RenderTarget& target) const;
-	const std::vector<Poop>& GetPoops() const { return poops; }
+	std::vector<Poop>& GetPoops() { return poops; }
 private:
 	float screenBottom;
 	float cd;

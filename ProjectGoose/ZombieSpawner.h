@@ -11,11 +11,11 @@
 class ZombieSpawner
 {
 public:
-	ZombieSpawner(ResourceHolder& resourceHolder, const sf::RenderWindow& window, sf::Vector2f spawnPos = sf::Vector2f(0.0f, 0.0f));
+	ZombieSpawner(const sf::RenderWindow& window, sf::Vector2f spawnPos = sf::Vector2f(0.0f, 0.0f));
 	void Update(float dt);
 	void DrawZombies(sf::RenderTarget& target);
 	void SetSpawnPosition(sf::Vector2f position) { spawnPosition = position; }
-	const auto& GetZombies() { return zombies; }
+	auto& GetZombies() { return zombies; }
 private:
 	void SpawnZombie();
 private:

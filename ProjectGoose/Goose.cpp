@@ -1,5 +1,5 @@
 #include "Goose.h"
-#include "Vec2.h"
+#include "VectorUtilities.h"
 
 Goose::Goose(ResourceHolder& resourceHolder, const sf::RenderWindow& in_window)
 	:animation(resourceHolder.GetTexture("Assets/Textures/gooseSpritesheet.png"), 3, 3, 1), window(in_window), shooter(in_window)
@@ -19,7 +19,7 @@ void Goose::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void Goose::Update(float dt)
 {
-	Vec2f moveVec;
+	sf::Vector2f moveVec;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
 		moveVec.y -= 1.0f;
@@ -38,7 +38,8 @@ void Goose::Update(float dt)
 		moveVec.x += 1.0f;
 		transform.setScale(scale, scale);
 	}
-	transform.move(moveVec.Normalize() * speed * dt);
+	Normalize(moveVec);
+	transform.move(moveVec * speed * dt);
 	ClampToWindow();
 
 	animation.Update(dt);
@@ -59,7 +60,7 @@ void Goose::DetectCollisions(ZombieSpawner& zombieSpawner)
 	auto& zombies = zombieSpawner.GetZombies();
 	auto& poops = shooter.GetPoops();
 	auto myBounds = GetBounds();
-	for (const auto& zombie : zombies)
+	for (auto& zombie : zombies)
 	{
 		if (zombie->GetState() != Zombie::State::Dying && zombie->GetState() != Zombie::State::Dead)
 		{
@@ -69,7 +70,7 @@ void Goose::DetectCollisions(ZombieSpawner& zombieSpawner)
 				TakeDamage();
 			}
 			bool zombieHit = std::any_of(poops.begin(), poops.end(),
-				[&zombieBounds](const Poop& poop) {
+				[&zombieBounds](Poop& poop) {
 					bool collided = zombieBounds.intersects(poop.GetBounds());
 					if (collided) { poop.collided = true; }
 					return collided;
