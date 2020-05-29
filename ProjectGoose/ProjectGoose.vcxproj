@@ -160,6 +160,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Poop.cpp" />
     <ClCompile Include="ResourceHolder.cpp" />
+    <ClCompile Include="ZombieProjectile.cpp" />
     <ClCompile Include="ScrollingBackground.cpp" />
     <ClCompile Include="Shooter.cpp" />
     <ClCompile Include="Zombie.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="Goose.h" />
     <ClInclude Include="Poop.h" />
     <ClInclude Include="ResourceHolder.h" />
+    <ClInclude Include="ZombieProjectile.h" />
     <ClInclude Include="ScrollingBackground.h" />
     <ClInclude Include="Shooter.h" />
     <ClInclude Include="SpriteSheet.h" />

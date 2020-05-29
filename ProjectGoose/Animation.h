@@ -13,7 +13,11 @@ public:
 	void Update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	sf::FloatRect GetBounds() const { return sprite.getLocalBounds(); }
-	bool Done() { return !loop && currentFrame == spriteSheet.nFrames - 1; }
+	bool Done(bool resetIfDone = false) { 
+		bool done = !loop && currentFrame == spriteSheet.nFrames - 1;
+		if (done && resetIfDone) { currentFrame = 0; }
+		return done;
+	}
 	void Reset() { currentFrame = 0; }
 private:
 	void GoNextFrame();

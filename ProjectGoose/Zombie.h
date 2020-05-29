@@ -11,7 +11,7 @@
 class Zombie : public sf::Drawable
 {
 public:
-	Zombie(sf::Vector2f spawnPosition, const sf::RenderWindow& window);
+	Zombie(sf::Vector2f spawnPosition, const sf::RenderWindow& window, const sf::Vector2f& playerPosition);
 	void Update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	void TakeDamage();
@@ -51,4 +51,5 @@ private:
 	int hitPoints = 3;
 	const float attackCooldown = 2.0f;
 	float timeSinceLastAttacked = 0.0f;
+	const sf::Vector2f& playerPosition;
 };

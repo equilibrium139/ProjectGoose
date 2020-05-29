@@ -17,6 +17,7 @@ public:
 	void Update(float dt);
 	void DetectCollisions(ZombieSpawner& zombieSpawner);
 	sf::FloatRect GetBounds() const { return transform.getTransform().transformRect(animation.GetBounds()); }
+	const sf::Vector2f& GetPosition() const { return transform.getPosition(); }
 private:
 	void ClampToWindow();
 	void TakeDamage() { --hitPoints; std::cout << "Collided with zombie\n"; }

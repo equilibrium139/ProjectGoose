@@ -1,9 +1,10 @@
 #include "ZombieSpawner.h"
+#include "ZombieProjectile.h"
 #include <iostream>
 
-ZombieSpawner::ZombieSpawner(const sf::RenderWindow& window, sf::Vector2f spawnPos )
+ZombieSpawner::ZombieSpawner(const sf::RenderWindow& window, const sf::Vector2f& playerPosition, sf::Vector2f spawnPos)
 	:spawnPosition(spawnPos), timeSinceLastSpawned(std::numeric_limits<float>::max()),
-	resourceHolder(resourceHolder), window(window)
+	 window(window), playerPosition(playerPosition)
 {
 }
 
@@ -20,14 +21,12 @@ void ZombieSpawner::Update(float dt)
 		std::remove_if(zombies.begin(), zombies.end(),
 			[dt](auto& zombie) {
 				zombie->Update(dt);
-				if (zombie->GetState() == Zombie::State::Dead)
-				{
-					std::cout << "Break";
-				}
 				return zombie->GetState() == Zombie::State::Dead;
 			}),
 		zombies.end()
 	);
+
+	ZombieProjectile::UpdateAll(dt);
 }
 
 void ZombieSpawner::DrawZombies(sf::RenderTarget& target)
@@ -36,9 +35,11 @@ void ZombieSpawner::DrawZombies(sf::RenderTarget& target)
 	{
 		target.draw(*zombie);
 	}
+
+	ZombieProjectile::DrawAll(target);
 }
 
 void ZombieSpawner::SpawnZombie()
 {
-	zombies.emplace_back(std::make_unique<Zombie>(spawnPosition, window));
+	zombies.emplace_back(std::make_unique<Zombie>(spawnPosition, window, playerPosition));
 }

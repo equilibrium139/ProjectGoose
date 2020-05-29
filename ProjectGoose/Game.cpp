@@ -5,7 +5,7 @@ Game::Game(sf::RenderWindow& window)
 	:wnd(window),
 	player(wnd),
 	background("Assets/Textures/background.jpg", wnd),
-	zombieSpawner(wnd)
+	zombieSpawner(wnd, player.GetPosition())
 {
 	SetWindowView();
 	std::cout << wnd.getView().getSize().x + 10.0f << '\n';
