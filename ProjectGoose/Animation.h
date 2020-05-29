@@ -14,6 +14,7 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	sf::FloatRect GetBounds() const { return sprite.getLocalBounds(); }
 	bool Done() { return !loop && currentFrame == spriteSheet.nFrames - 1; }
+	void Reset() { currentFrame = 0; }
 private:
 	void GoNextFrame();
 private:

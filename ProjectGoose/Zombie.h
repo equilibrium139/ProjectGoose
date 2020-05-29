@@ -11,7 +11,7 @@
 class Zombie : public sf::Drawable
 {
 public:
-	Zombie(sf::Vector2f spawnPosition, ResourceHolder& resourceHolder, const sf::RenderWindow& window);
+	Zombie(sf::Vector2f spawnPosition, const sf::RenderWindow& window);
 	void Update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	void TakeDamage();
@@ -36,14 +36,19 @@ private:
 	bool male = CoinFlip();
 	Animation walk;
 	Animation death;
+	Animation attack;
 	const static SpriteSheet maleWalk;
 	const static SpriteSheet maleDeath;
+	const static SpriteSheet maleAttack;
 	const static SpriteSheet femaleWalk;
 	const static SpriteSheet femaleDeath;
+	const static SpriteSheet femaleAttack;
 	/*Animation maleWalk;
 	Animation maleDeath;*/
 	sf::Transformable transform;
 	float speed = 100.0f;
 	State state = State::Moving;
 	int hitPoints = 3;
+	const float attackCooldown = 2.0f;
+	float timeSinceLastAttacked = 0.0f;
 };

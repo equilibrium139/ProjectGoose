@@ -40,5 +40,5 @@ void ZombieSpawner::DrawZombies(sf::RenderTarget& target)
 
 void ZombieSpawner::SpawnZombie()
 {
-	zombies.emplace_back(std::make_unique<Zombie>(spawnPosition, resourceHolder, window));
+	zombies.emplace_back(std::make_unique<Zombie>(spawnPosition, window));
 }

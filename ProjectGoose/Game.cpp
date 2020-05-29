@@ -8,7 +8,8 @@ Game::Game(sf::RenderWindow& window)
 	zombieSpawner(wnd)
 {
 	SetWindowView();
-	zombieSpawner.SetSpawnPosition({ wnd.getView().getSize().x + 10.0f, wnd.getView().getSize().y - 175.0f });
+	std::cout << wnd.getView().getSize().x + 10.0f << '\n';
+	zombieSpawner.SetSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 175.0f });
 }
 
 void Game::SetWindowView()
