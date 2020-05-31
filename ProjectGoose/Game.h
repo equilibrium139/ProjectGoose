@@ -21,6 +21,7 @@ private:
 private:
 	sf::RenderWindow& wnd;
 
+	sf::Music backgroundMusic;
 	sf::Clock frameTimer;
 	float dt = 0.0f;
 	Goose player;

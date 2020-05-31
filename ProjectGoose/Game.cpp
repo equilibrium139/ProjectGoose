@@ -7,6 +7,9 @@ Game::Game(sf::RenderWindow& window)
 	background("Assets/Textures/background.jpg", wnd),
 	zombieSpawner(wnd, player.GetPosition())
 {
+	backgroundMusic.openFromFile("Assets/Sounds/bgmusic.ogg");
+	backgroundMusic.setLoop(true);
+	backgroundMusic.play();
 	SetWindowView();
 	std::cout << wnd.getView().getSize().x + 10.0f << '\n';
 	zombieSpawner.SetSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 175.0f });
