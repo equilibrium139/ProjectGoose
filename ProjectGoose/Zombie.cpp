@@ -16,10 +16,18 @@ Zombie::Zombie(sf::Vector2f spawnPosition, const sf::RenderWindow& wnd, const sf
 	/*maleWalk(resourceHolder.GetTexture("Assets/Textures/maleZombieAttack.png"), 8, 2, 4, 10),
      maleDeath(resourceHolder.GetTexture("Assets/Textures/maleZombieDeath.png"), 12, 1, 12, 10, false)*/
 {
-	transform.setScale(-0.15f, 0.15f); // mirror and scale down
+	switch (type)
+	{
+	case Type::Normal:
+		scale = 0.15f;
+		break;
+	case Type::Giant:
+		scale = 0.25f;
+		break;
+	}
+	transform.setScale(-scale, scale); // mirror and scale down
 	// auto bounds = maleWalk.GetBounds();
 	transform.setPosition(spawnPosition);
-
 }
 
 void Zombie::Update(float dt)

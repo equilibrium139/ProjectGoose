@@ -22,6 +22,11 @@ public:
 		Dying,
 		Dead
 	};
+	enum class Type
+	{
+		Normal,
+		Giant
+	};
 	State GetState() const { return state; }
 	sf::FloatRect GetBounds() const { return transform.getTransform().transformRect(walk.GetBounds()); }
 private:
@@ -52,4 +57,6 @@ private:
 	const float attackCooldown = 2.0f;
 	float timeSinceLastAttacked = 0.0f;
 	const sf::Vector2f& playerPosition;
+	Type type = Type::Normal;
+	float scale;
 };
