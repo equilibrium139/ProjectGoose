@@ -18,3 +18,20 @@ sf::Texture& ResourceHolder::GetTexture(const std::string& path)
 		return newTexture;
 	}
 }
+
+sf::SoundBuffer& ResourceHolder::GetSoundBuffer(const std::string& path)
+{
+	static std::unordered_map<std::string, sf::SoundBuffer> soundBuffers;
+
+	auto pair = soundBuffers.find(path);
+	if (pair != soundBuffers.end())
+	{
+		return pair->second;
+	}
+	else
+	{
+		auto& newSoundBuffer = soundBuffers[path];
+		newSoundBuffer.loadFromFile(path);
+		return newSoundBuffer;
+	}
+}
