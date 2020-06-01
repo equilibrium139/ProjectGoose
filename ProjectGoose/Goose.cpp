@@ -1,17 +1,26 @@
 #include "Goose.h"
 #include "VectorUtilities.h"
 
-Goose::Goose(const sf::RenderWindow& in_window)
-	:animation(ResourceHolder::GetTexture("Assets/Textures/gooseSpritesheet.png"), 3, 3, 1), window(in_window), shooter(in_window)
+//Goose::Goose(const sf::RenderWindow& in_window)
+//	:animation(ResourceHolder::GetTexture("Assets/Textures/gooseSpritesheet.png"), 3, 3, 1), window(in_window), shooter(in_window)
+//{
+//	auto bounds = animation.GetBounds();
+//	transform.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f);
+//	transform.setScale(scale, scale);
+//}
+
+Goose::Goose(const sf::RenderWindow& window, sf::Vector2f position, float scale, float speed, int hitPoints)
+	:window(window), animation(ResourceHolder::GetTexture("Assets/Textures/gooseSpritesheet.png"), 3, 3, 1), 
+	 speed(speed), hitPoints(hitPoints), shooter(window)
 {
 	auto bounds = animation.GetBounds();
-	transform.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f);
+	transform.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f); // set origin to center of sprite
+	transform.setPosition(position);
 	transform.setScale(scale, scale);
 }
 
 void Goose::draw(sf::RenderTarget& target, sf::RenderStates states) const 
 {
-	//target.draw(sprite, states);
 	states.transform *= transform.getTransform();
 	target.draw(animation, states);
 	shooter.DrawPoops(target);
@@ -19,29 +28,8 @@ void Goose::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void Goose::Update(float dt)
 {
-	sf::Vector2f moveVec;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-	{
-		moveVec.y -= 1.0f;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-	{
-		moveVec.y += 1.0f;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-	{
-		moveVec.x -= 1.0f;
-		transform.setScale(-scale, scale);
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-	{
-		moveVec.x += 1.0f;
-		transform.setScale(scale, scale);
-	}
-	Normalize(moveVec);
-	transform.move(moveVec * speed * dt);
+	ProcessMovementInput(dt);
 	ClampToWindow();
-
 	animation.Update(dt);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
@@ -54,7 +42,32 @@ void Goose::Update(float dt)
 	shooter.Update(dt);
 }
 
-// Detects if the goose is colliding with any zombies, or if any zombies got hit by poop
+void Goose::ProcessMovementInput(float dt)
+{
+	sf::Vector2f moveVec(0.0f, 0.0f);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	{
+		moveVec.y -= 1.0f;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	{
+		moveVec.y += 1.0f;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	{
+		moveVec.x -= 1.0f;
+		// mirror the goose sprite to make it look in the direction it's moving
+		transform.setScale(-std::abs(transform.getScale().x), transform.getScale().y);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+	{
+		moveVec.x += 1.0f;
+		transform.setScale(std::abs(transform.getScale().x), transform.getScale().y);
+	}
+	Normalize(moveVec);
+	transform.move(moveVec * speed * dt);
+}
+
 void Goose::DetectCollisions(ZombieSpawner& zombieSpawner)
 {
 	auto& zombies = zombieSpawner.GetZombies();
@@ -64,11 +77,13 @@ void Goose::DetectCollisions(ZombieSpawner& zombieSpawner)
 	{
 		if (zombie->GetState() != Zombie::State::Dying && zombie->GetState() != Zombie::State::Dead)
 		{
+			// Detect collisions between goose and zombies
 			auto zombieBounds = zombie->GetBounds();
 			if (myBounds.intersects(zombieBounds))
 			{
 				TakeDamage();
 			}
+			// Detect collisions between zombies and poop
 			bool zombieHit = std::any_of(poops.begin(), poops.end(),
 				[&zombieBounds](Poop& poop) {
 					bool collided = zombieBounds.intersects(poop.GetBounds());
