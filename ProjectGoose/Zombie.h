@@ -11,7 +11,7 @@
 class Zombie : public sf::Drawable
 {
 public:
-	Zombie(sf::Vector2f spawnPosition, const sf::RenderWindow& window, const sf::Vector2f& playerPosition);
+	Zombie(const sf::Vector2f& playerPosition, sf::Vector2f position, float scale = 0.15f, float speed = 100.0f, int hitPoints = 1);
 	void Update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	void TakeDamage();
@@ -21,11 +21,6 @@ public:
 		Attacking,
 		Dying,
 		Dead
-	};
-	enum class Type
-	{
-		Normal,
-		Giant
 	};
 	State GetState() const { return state; }
 	sf::FloatRect GetBounds() const { return transform.getTransform().transformRect(walk.GetBounds()); }
@@ -48,15 +43,12 @@ private:
 	const static SpriteSheet femaleWalk;
 	const static SpriteSheet femaleDeath;
 	const static SpriteSheet femaleAttack;
-	/*Animation maleWalk;
-	Animation maleDeath;*/
 	sf::Transformable transform;
-	float speed = 100.0f;
+	float scale;
+	float speed;
 	State state = State::Moving;
-	int hitPoints = 3;
+	int hitPoints;
 	const float attackCooldown = 2.0f;
 	float timeSinceLastAttacked = 0.0f;
 	const sf::Vector2f& playerPosition;
-	Type type = Type::Normal;
-	float scale;
 };

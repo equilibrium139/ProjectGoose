@@ -10,24 +10,16 @@ const SpriteSheet Zombie::femaleWalk = SpriteSheet(ResourceHolder::GetTexture("A
 const SpriteSheet Zombie::femaleDeath = SpriteSheet(ResourceHolder::GetTexture("Assets/Textures/femaleZombieDeath.png"), 12, 1, 12);
 const SpriteSheet Zombie::femaleAttack = SpriteSheet(ResourceHolder::GetTexture("Assets/Textures/femaleZombieAttack.png"), 8, 1, 8);
 
-Zombie::Zombie(sf::Vector2f spawnPosition, const sf::RenderWindow& wnd, const sf::Vector2f& playerPosition)
+Zombie::Zombie(const sf::Vector2f& playerPosition, sf::Vector2f position, float scale, float speed, int hitPoints)
 	: walk(male ? maleWalk : femaleWalk, 10.0f), death(male ? maleDeath : femaleDeath, 10.0f, false),
-	  attack(male ? maleAttack : femaleAttack, 10.0f, false), playerPosition(playerPosition)
+	  attack(male ? maleAttack : femaleAttack, 10.0f, false), playerPosition(playerPosition), speed(speed), hitPoints(hitPoints)
 	/*maleWalk(resourceHolder.GetTexture("Assets/Textures/maleZombieAttack.png"), 8, 2, 4, 10),
      maleDeath(resourceHolder.GetTexture("Assets/Textures/maleZombieDeath.png"), 12, 1, 12, 10, false)*/
 {
-	switch (type)
-	{
-	case Type::Normal:
-		scale = 0.15f;
-		break;
-	case Type::Giant:
-		scale = 0.25f;
-		break;
-	}
 	transform.setScale(-scale, scale); // mirror and scale down
-	// auto bounds = maleWalk.GetBounds();
-	transform.setPosition(spawnPosition);
+	auto bounds = GetBounds();
+	transform.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f);
+	transform.setPosition(position);
 }
 
 void Zombie::Update(float dt)
@@ -41,7 +33,16 @@ void Zombie::Update(float dt)
 	if (timeSinceLastAttacked > attackCooldown && state != State::Dying && state != State::Dead)
 	{
 		state = State::Attacking;
-		ZombieProjectile::Spawn(transform.getPosition() + sf::Vector2f(-40.0f, 50.0f), playerPosition);
+		if (playerPosition.x > transform.getPosition().x)
+		{
+			transform.setScale(std::abs(transform.getScale().x), transform.getScale().y);
+		}
+		else
+		{
+			transform.setScale(-std::abs(transform.getScale().x), transform.getScale().y);
+		}
+		std::cout << transform.getScale().x << '\n';
+		ZombieProjectile::Spawn(transform.getPosition() + sf::Vector2f(transform.getScale().x * 260.0f, transform.getScale().y * 330.0f), playerPosition);
 		timeSinceLastAttacked = 0.0f;
 	}
 	switch (state)
@@ -59,8 +60,10 @@ void Zombie::Update(float dt)
 		break;
 	case State::Attacking:
 		attack.Update(dt);
+		
 		if (attack.Done(true))
 		{
+			transform.setScale(-std::abs(transform.getScale().x), transform.getScale().y);
 			state = State::Moving;
 		}
 		break;

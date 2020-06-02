@@ -1,22 +1,27 @@
 #include "ZombieSpawner.h"
-#include "ZombieProjectile.h"
 #include <iostream>
 
-ZombieSpawner::ZombieSpawner(const sf::RenderWindow& window, const sf::Vector2f& playerPosition, sf::Vector2f spawnPos)
-	:spawnPosition(spawnPos), timeSinceLastSpawned(std::numeric_limits<float>::max()),
-	 window(window), playerPosition(playerPosition)
+ZombieSpawner::ZombieSpawner(const sf::Vector2f& playerPosition, const ZombieSpawnBehavior& minionSpawnBehavior, const ZombieSpawnBehavior& giantSpawnBehavior)
+	:playerPosition(playerPosition), minionSpawnBehavior(minionSpawnBehavior), giantSpawnBehavior(giantSpawnBehavior),
+	timeSinceLastSpawnedMinion(this->minionSpawnBehavior.spawnInterval - this->minionSpawnBehavior.minionSpawnStartTime),
+	timeSinceLastSpawnedGiant(this->giantSpawnBehavior.spawnInterval - this->giantSpawnBehavior.minionSpawnStartTime)
 {
 }
 
 void ZombieSpawner::Update(float dt)
 {
-	timeSinceLastSpawned += dt;
-	if (timeSinceLastSpawned > spawnInterval)
+	timeSinceLastSpawnedMinion += dt;
+	timeSinceLastSpawnedGiant += dt;
+	if (timeSinceLastSpawnedMinion >= minionSpawnBehavior.spawnInterval)
 	{
-		SpawnZombie();
-		timeSinceLastSpawned = 0.0f;
+		SpawnZombie(minionSpawnBehavior);
+		timeSinceLastSpawnedMinion = 0.0f;
 	}
-
+	if (timeSinceLastSpawnedGiant >= giantSpawnBehavior.spawnInterval)
+	{
+		SpawnZombie(giantSpawnBehavior);
+		timeSinceLastSpawnedGiant = 0.0f;
+	}
 	zombies.erase(
 		std::remove_if(zombies.begin(), zombies.end(),
 			[dt](auto& zombie) {
@@ -25,8 +30,6 @@ void ZombieSpawner::Update(float dt)
 			}),
 		zombies.end()
 	);
-
-	ZombieProjectile::UpdateAll(dt);
 }
 
 void ZombieSpawner::DrawZombies(sf::RenderTarget& target)
@@ -35,11 +38,10 @@ void ZombieSpawner::DrawZombies(sf::RenderTarget& target)
 	{
 		target.draw(*zombie);
 	}
-
-	ZombieProjectile::DrawAll(target);
 }
 
-void ZombieSpawner::SpawnZombie()
+void ZombieSpawner::SpawnZombie(const ZombieSpawnBehavior& spawnBehavior)
 {
-	zombies.emplace_back(std::make_unique<Zombie>(spawnPosition, window, playerPosition));
+	zombies.emplace_back(std::make_unique<Zombie>(playerPosition, spawnBehavior.spawnPos, spawnBehavior.scale, spawnBehavior.speed,
+		spawnBehavior.hitpoints));
 }

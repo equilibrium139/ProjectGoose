@@ -1,27 +1,29 @@
 #include "Game.h"
+
 #include <iostream>
+
+#include "ZombieProjectile.h"
 
 Game::Game(sf::RenderWindow& window)
 	:wnd(window),
 	player(wnd),
 	background("Assets/Textures/background.jpg", wnd),
-	zombieSpawner(wnd, player.GetPosition())
+	zombieSpawner(player.GetPosition(), {}, ZombieSpawner::ZombieSpawnBehavior{ sf::Vector2f(0.0f, 0.0f), 6.0f, 10.0f, 0.3f, 75.0f, 3 })
 {
 	backgroundMusic.openFromFile("Assets/Sounds/bgmusic.ogg");
 	backgroundMusic.setLoop(true);
 	backgroundMusic.play();
 	SetWindowView();
 	std::cout << wnd.getView().getSize().x + 10.0f << '\n';
-	zombieSpawner.SetSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 175.0f });
+	zombieSpawner.SetMinionSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 175.0f });
+	zombieSpawner.SetGiantSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 275.0f });
 }
 
 void Game::SetWindowView()
 {
 	float bgWidth = background.Width();
 	float bgHeight = background.Height();
-	std::cout << bgWidth << '\n';
 	sf::View bgView(sf::Vector2f(bgWidth / 2.0f, bgHeight / 2.0f), sf::Vector2f(bgWidth, bgHeight));
-	std::cout << bgView.getSize().x << '\n';
 	wnd.setView(bgView);
 	std::cout << wnd.getView().getSize().x << '\n';
 }
@@ -52,11 +54,13 @@ void Game::Update()
 	player.Update(dt);
 	background.Update(dt);
 	zombieSpawner.Update(dt);
+	ZombieProjectile::UpdateAll(dt);
 }
 
 void Game::Draw()
 {
 	wnd.draw(background);
+	ZombieProjectile::DrawAll(wnd);
 	zombieSpawner.DrawZombies(wnd);
 	wnd.draw(player);
 }
