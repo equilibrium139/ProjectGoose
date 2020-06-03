@@ -165,7 +165,7 @@
     <ClCompile Include="ScrollingBackground.cpp" />
     <ClCompile Include="Shooter.cpp" />
     <ClCompile Include="Zombie.cpp" />
-    <ClCompile Include="ZombieSpawner.cpp" />
+    <ClCompile Include="EnemySpawner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -180,7 +180,7 @@
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="VectorUtilities.h" />
     <ClInclude Include="Zombie.h" />
-    <ClInclude Include="ZombieSpawner.h" />
+    <ClInclude Include="EnemySpawner.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

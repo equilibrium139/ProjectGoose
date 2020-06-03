@@ -4,7 +4,7 @@
 
 #include <SFML/Graphics.hpp>
 
-class Enemy
+class Enemy : public sf::Drawable
 {
 public:
 	enum class State
@@ -24,6 +24,8 @@ public:
 			state = State::Dying;
 		}
 	}
+	virtual void SetPosition(sf::Vector2f newPos) = 0;
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override = 0;
 	State GetState() { return state; }
 	virtual ~Enemy() = default;
 protected:

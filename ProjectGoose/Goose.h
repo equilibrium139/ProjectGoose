@@ -8,7 +8,7 @@
 #include "Animation.h"
 #include "ResourceHolder.h"
 #include "Shooter.h"
-#include "ZombieSpawner.h"
+#include "EnemySpawner.h"
 #include "SpriteSheet.h"
 
 // Player will play as a Goose. Standard WASD movement, with Space to poop on zombies
@@ -25,7 +25,7 @@ public:
 	/*
 		Detects if the goose is colliding with any zombies, or if any zombies got hit by poop
 	*/
-	void DetectCollisions(ZombieSpawner& zombieSpawner);
+	void DetectCollisions(EnemySpawner& zombieSpawner);
 	sf::FloatRect GetBounds() const { return sprite.getGlobalBounds(); }
 	const sf::Vector2f& GetPosition() const { return sprite.getPosition(); }
 private:

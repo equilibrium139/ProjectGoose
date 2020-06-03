@@ -8,7 +8,9 @@ Game::Game(sf::RenderWindow& window)
 	:wnd(window),
 	player(wnd),
 	background("Assets/Textures/background.jpg", wnd),
-	zombieSpawner(player.GetPosition(), {}, ZombieSpawner::ZombieSpawnBehavior{ sf::Vector2f(0.0f, 0.0f), 6.0f, 10.0f, 0.3f, 75.0f, 3 })
+	minionPrototype(player.GetPosition()),
+	giantPrototype(player.GetPosition(), {}, 0.30f, 75.0f, 3),
+	zombieSpawner(EnemySpawner::EnemySpawnBehavior( &minionPrototype ), EnemySpawner::EnemySpawnBehavior( &giantPrototype, 5.0f, 6.0f ))
 {
 	backgroundMusic.openFromFile("Assets/Sounds/bgmusic.ogg");
 	backgroundMusic.setLoop(true);
@@ -60,7 +62,7 @@ void Game::Update()
 void Game::Draw()
 {
 	wnd.draw(background);
-	zombieSpawner.DrawZombies(wnd);
+	zombieSpawner.DrawEnemies(wnd);
 	ZombieProjectile::DrawAll(wnd);
 	wnd.draw(player);
 }

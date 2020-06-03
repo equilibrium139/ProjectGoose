@@ -58,14 +58,14 @@ void Goose::ProcessMovementInput(float dt)
 	sprite.move(moveVec * speed * dt);
 }
 
-void Goose::DetectCollisions(ZombieSpawner& zombieSpawner)
+void Goose::DetectCollisions(EnemySpawner& zombieSpawner)
 {
-	auto& zombies = zombieSpawner.GetZombies();
+	auto& zombies = zombieSpawner.GetEnemies();
 	auto& poops = shooter.GetPoops();
 	auto myBounds = GetBounds();
 	for (auto& zombie : zombies)
 	{
-		if (zombie->GetState() != Zombie::State::Dying && zombie->GetState() != Zombie::State::Dead)
+		if (zombie->GetState() != Enemy::State::Dying && zombie->GetState() != Enemy::State::Dead)
 		{
 			// Detect collisions between goose and zombies
 			auto zombieBounds = zombie->GetBounds();

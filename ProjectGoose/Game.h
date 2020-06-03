@@ -6,7 +6,7 @@
 #include "ScrollingBackground.h"
 #include "ResourceHolder.h"
 #include "Zombie.h"
-#include "ZombieSpawner.h"
+#include "EnemySpawner.h"
 
 class Game
 {
@@ -26,7 +26,9 @@ private:
 	float dt = 0.0f;
 	Goose player;
 	ScrollingBackground background;
-	ZombieSpawner zombieSpawner;
+	Zombie minionPrototype;
+	Zombie giantPrototype;
+	EnemySpawner zombieSpawner;
 	float collisionCheckInterval = 1.0f / 24.0f; // check for collision 24 times a second
 	float timeSinceLastCheckedCollision = std::numeric_limits<float>::max();
 };
