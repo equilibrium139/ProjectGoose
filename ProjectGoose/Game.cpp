@@ -15,8 +15,8 @@ Game::Game(sf::RenderWindow& window)
 	backgroundMusic.play();
 	SetWindowView();
 	std::cout << wnd.getView().getSize().x + 10.0f << '\n';
-	zombieSpawner.SetMinionSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 175.0f });
-	zombieSpawner.SetGiantSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 275.0f });
+	zombieSpawner.SetMinionSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 125.0f });
+	zombieSpawner.SetGiantSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 200.0f });
 }
 
 void Game::SetWindowView()
@@ -60,7 +60,7 @@ void Game::Update()
 void Game::Draw()
 {
 	wnd.draw(background);
-	ZombieProjectile::DrawAll(wnd);
 	zombieSpawner.DrawZombies(wnd);
+	ZombieProjectile::DrawAll(wnd);
 	wnd.draw(player);
 }

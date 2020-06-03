@@ -14,7 +14,7 @@ public:
 		Dying,
 		Dead
 	};
-	virtual std::unique_ptr<Enemy> clone() = 0;
+	virtual std::unique_ptr<Enemy> Clone() const = 0;
 	virtual sf::FloatRect GetBounds() const = 0;
 	virtual void Update(float dt) = 0;
 	virtual void TakeDamage()
@@ -27,6 +27,8 @@ public:
 	State GetState() { return state; }
 	virtual ~Enemy() = default;
 protected:
+	Enemy(int hp)
+		:hitPoints(hp) {}
 	State state = State::Moving;
 	int hitPoints;
 };

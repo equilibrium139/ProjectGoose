@@ -11,38 +11,23 @@ const SpriteSheet Zombie::femaleDeath = SpriteSheet(ResourceHolder::GetTexture("
 const SpriteSheet Zombie::femaleAttack = SpriteSheet(ResourceHolder::GetTexture("Assets/Textures/femaleZombieAttack.png"), 8, 1, 8);
 
 Zombie::Zombie(const sf::Vector2f& playerPosition, sf::Vector2f position, float scale, float speed, int hitPoints)
-	: walk(male ? maleWalk : femaleWalk, 10.0f), death(male ? maleDeath : femaleDeath, 10.0f, false),
-	  attack(male ? maleAttack : femaleAttack, 10.0f, false), playerPosition(playerPosition), speed(speed), hitPoints(hitPoints)
-	/*maleWalk(resourceHolder.GetTexture("Assets/Textures/maleZombieAttack.png"), 8, 2, 4, 10),
-     maleDeath(resourceHolder.GetTexture("Assets/Textures/maleZombieDeath.png"), 12, 1, 12, 10, false)*/
+	: Enemy(hitPoints), walk(sprite, male ? maleWalk : femaleWalk, 10.0f, true, true), death(sprite, male ? maleDeath : femaleDeath, 10.0f, false, true),
+	  attack(sprite, male ? maleAttack : femaleAttack, 10.0f, false, true), playerPosition(playerPosition), speed(speed)
 {
-	transform.setScale(-scale, scale); // mirror and scale down
-	auto bounds = GetBounds();
-	transform.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f);
-	transform.setPosition(position);
+	sprite.setScale(scale, scale);
+	auto bounds = sprite.getLocalBounds();
+	sprite.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f);
+	sprite.setPosition(position);
 }
 
 void Zombie::Update(float dt)
 {
-	if (GetBounds().left + GetBounds().width < 0)
-	{
-		state = State::Dead;
-	}
-	//TODO refactor
-	timeSinceLastAttacked += dt;
 	if (timeSinceLastAttacked > attackCooldown && state != State::Dying && state != State::Dead)
 	{
 		state = State::Attacking;
-		if (playerPosition.x > transform.getPosition().x)
-		{
-			transform.setScale(std::abs(transform.getScale().x), transform.getScale().y);
-		}
-		else
-		{
-			transform.setScale(-std::abs(transform.getScale().x), transform.getScale().y);
-		}
-		std::cout << transform.getScale().x << '\n';
-		ZombieProjectile::Spawn(transform.getPosition() + sf::Vector2f(transform.getScale().x * 260.0f, transform.getScale().y * 330.0f), playerPosition);
+		
+		LookAtPlayer(attack);
+		ZombieProjectile::Spawn(sprite.getPosition()/* + sf::Vector2f(sprite.getScale().x * 260.0f, sprite.getScale().y * 330.0f)*/, playerPosition);
 		timeSinceLastAttacked = 0.0f;
 	}
 	switch (state)
@@ -55,47 +40,47 @@ void Zombie::Update(float dt)
 		}
 		break;
 	case State::Moving:
-		transform.move(sf::Vector2f(-1.0f, 0.0f) * speed * dt);
+		sprite.move(sf::Vector2f(-1.0f, 0.0f) * speed * dt);
 		walk.Update(dt);
+		timeSinceLastAttacked += dt;
 		break;
 	case State::Attacking:
 		attack.Update(dt);
 		
 		if (attack.Done(true))
 		{
-			transform.setScale(-std::abs(transform.getScale().x), transform.getScale().y);
 			state = State::Moving;
 		}
 		break;
 	}
 
-
+	if (GetBounds().left + GetBounds().width < 0)
+	{
+		state = State::Dead;
+	}
 }
 
 void Zombie::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	states.transform *= transform.getTransform();
-	auto bounds = walk.GetBounds();
-	switch (state)
-	{
-	case State::Moving:
-		target.draw(walk, states);
-		break;
-	case State::Dying:
-		target.draw(death, states);
-		break;
-	case State::Attacking:
-		target.draw(attack, states);
-		break;
-	}
-	// target.draw(rect, states);
+	/*auto bounds = sprite.getGlobalBounds();
+	sf::RectangleShape rs({ bounds.width, bounds.height });
+	rs.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f);
+	rs.setPosition(sprite.getPosition());
+	rs.setFillColor(sf::Color::Transparent);
+	rs.setOutlineThickness(5.0f);
+	rs.setOutlineColor(sf::Color::Green);*/
+	target.draw(sprite, states);
+	// target.draw(rs, states);
 }
 
-void Zombie::TakeDamage()
+void Zombie::LookAtPlayer(Animation& current)
 {
-	std::cout << "Ouch\n";
-	if (--hitPoints <= 0)
+	if (playerPosition.x > sprite.getPosition().x)
 	{
-		state = State::Dying;
+		current.SetFlip(false);
+	}
+	else
+	{
+		current.SetFlip(true);
 	}
 }
