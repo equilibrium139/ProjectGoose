@@ -9,6 +9,7 @@
 #include "ResourceHolder.h"
 #include "Shooter.h"
 #include "ZombieSpawner.h"
+#include "SpriteSheet.h"
 
 // Player will play as a Goose. Standard WASD movement, with Space to poop on zombies
 // Movement is clamped to within the bounds of the window
@@ -25,14 +26,19 @@ public:
 		Detects if the goose is colliding with any zombies, or if any zombies got hit by poop
 	*/
 	void DetectCollisions(ZombieSpawner& zombieSpawner);
-	sf::FloatRect GetBounds() const { return transform.getTransform().transformRect(animation.GetBounds()); }
-	const sf::Vector2f& GetPosition() const { return transform.getPosition(); }
+	sf::FloatRect GetBounds() const { return sprite.getGlobalBounds(); }
+	const sf::Vector2f& GetPosition() const { return sprite.getPosition(); }
 private:
 	void ClampToWindow();
 	void TakeDamage() { --hitPoints; std::cout << "Collided with zombie\n"; }
 private:
+	const static SpriteSheet& sheet()
+	{
+		static SpriteSheet flySheet = SpriteSheet(ResourceHolder::GetTexture("Assets/Textures/gooseSpritesheet.png"), 3, 3, 1);
+		return flySheet;
+	}
 	const sf::RenderWindow& window;
-	sf::Transformable transform;
+	sf::Sprite sprite;
 	Animation animation;
 	Shooter shooter;
 	float speed;
