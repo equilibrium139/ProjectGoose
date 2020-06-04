@@ -77,32 +77,32 @@ void Goose::ProcessMovementInput(float dt)
 	sprite.move(moveVec * speed * dt);
 }
 
-void Goose::DetectCollisions(EnemySpawner& zombieSpawner)
+void Goose::DetectCollisions()
 {
-	auto& zombies = zombieSpawner.GetEnemies();
+	auto& enemies = EnemySpawner::GetEnemies();
 	auto& poops = shooter.GetPoops();
 	auto& zombieProjectiles = ZombieProjectile::projectiles;
 	auto myBounds = GetBounds();
-	for (auto& zombie : zombies)
+	for (auto& enemy : enemies)
 	{
-		if (zombie->GetState() != Enemy::State::Dying && zombie->GetState() != Enemy::State::Dead)
+		if (enemy->GetState() != Enemy::State::Dying && enemy->GetState() != Enemy::State::Dead)
 		{
-			// Detect collisions between goose and zombies
-			auto zombieBounds = zombie->GetBounds();
-			if (myBounds.intersects(zombieBounds))
+			// Detect collisions between goose and enemies
+			auto enemyBounds = enemy->GetBounds();
+			if (myBounds.intersects(enemyBounds))
 			{
 				TakeDamage();
 			}
-			// Detect collisions between zombies and poop
-			bool zombieHit = std::any_of(poops.begin(), poops.end(),
-				[&zombieBounds](Poop& poop) {
-					bool collided = zombieBounds.intersects(poop.GetBounds());
+			// Detect collisions between enemies and poop
+			bool enemyHit = std::any_of(poops.begin(), poops.end(),
+				[&enemyBounds](Poop& poop) {
+					bool collided = enemyBounds.intersects(poop.GetBounds());
 					if (collided) { poop.collided = true; }
 					return collided;
 				});
-			if (zombieHit)
+			if (enemyHit)
 			{
-				zombie->TakeDamage();
+				enemy->TakeDamage();
 			}
 		}
 	}

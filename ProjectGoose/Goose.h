@@ -25,7 +25,7 @@ public:
 	/*
 		Detects if the goose is colliding with any zombies, or if any zombies got hit by poop
 	*/
-	void DetectCollisions(EnemySpawner& zombieSpawner);
+	void DetectCollisions();
 	sf::FloatRect GetBounds() const { return sprite.getGlobalBounds(); }
 	const sf::Vector2f& GetPosition() const { return sprite.getPosition(); }
 	bool IsDead() const { return hitPoints <= 0; }

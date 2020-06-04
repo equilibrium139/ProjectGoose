@@ -1,46 +1,43 @@
 #include "EnemySpawner.h"
 #include <iostream>
 
-EnemySpawner::EnemySpawner(const EnemySpawnBehavior& minionSpawnBehavior, const EnemySpawnBehavior& giantSpawnBehavior)
-	:minionSpawnBehavior(minionSpawnBehavior), giantSpawnBehavior(giantSpawnBehavior),
-	timeSinceLastSpawnedMinion(this->minionSpawnBehavior.spawnInterval - this->minionSpawnBehavior.spawnStartTime),
-	timeSinceLastSpawnedGiant(this->giantSpawnBehavior.spawnInterval - this->giantSpawnBehavior.spawnStartTime)
+EnemySpawner::EnemySpawner(const EnemySpawnBehavior& spawnBehavior)
+	:spawnBehavior(spawnBehavior), 
+	timeSinceLastSpawnedEnemy(spawnBehavior.spawnInterval - spawnBehavior.spawnStartTime)
 {
 }
 
 void EnemySpawner::Update(float dt)
 {
-	timeSinceLastSpawnedMinion += dt;
-	timeSinceLastSpawnedGiant += dt;
-	if (timeSinceLastSpawnedMinion >= minionSpawnBehavior.spawnInterval)
+	timeSinceLastSpawnedEnemy += dt;
+	if (timeSinceLastSpawnedEnemy >= spawnBehavior.spawnInterval)
 	{
-		SpawnEnemy(minionSpawnBehavior);
-		timeSinceLastSpawnedMinion = 0.0f;
+		SpawnEnemy();
+		timeSinceLastSpawnedEnemy = 0.0f;
 	}
-	if (timeSinceLastSpawnedGiant >= giantSpawnBehavior.spawnInterval)
-	{
-		SpawnEnemy(giantSpawnBehavior);
-		timeSinceLastSpawnedGiant = 0.0f;
-	}
-	enemies.erase(
-		std::remove_if(enemies.begin(), enemies.end(),
+}
+
+void EnemySpawner::UpdateAllEnemies(float dt)
+{
+	GetEnemies().erase(
+		std::remove_if(GetEnemies().begin(), GetEnemies().end(),
 			[dt](auto& enemy) {
 				enemy->Update(dt);
 				return enemy->GetState() == Enemy::State::Dead;
 			}),
-		enemies.end()
-	);
+		GetEnemies().end()
+				);
 }
 
 void EnemySpawner::DrawEnemies(sf::RenderTarget& target)
 {
-	for(const auto& enemy: enemies)
+	for(const auto& enemy: GetEnemies())
 	{
 		target.draw(*enemy);
 	}
 }
 
-void EnemySpawner::SpawnEnemy(const EnemySpawnBehavior& spawnBehavior)
+void EnemySpawner::SpawnEnemy()
 {
-	enemies.emplace_back(spawnBehavior.prototype->Clone());
+	GetEnemies().emplace_back(spawnBehavior.prototype->Clone());
 }

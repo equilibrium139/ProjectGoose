@@ -26,9 +26,12 @@ private:
 	float dt = 0.0f;
 	Goose player;
 	ScrollingBackground background;
+	sf::Texture& loseBackgroundTexture;
+	sf::Sprite loseBackground;
 	Zombie minionPrototype;
 	Zombie giantPrototype;
-	EnemySpawner zombieSpawner;
+	EnemySpawner zombieMinionSpawner;
+	EnemySpawner zombieGiantSpawner;
 	float collisionCheckInterval = 1.0f / 24.0f; // check for collision 24 times a second
 	float timeSinceLastCheckedCollision = std::numeric_limits<float>::max();
 };

@@ -23,18 +23,18 @@ public:
 		float spawnStartTime = 0.0f;
 	};
 
-	EnemySpawner(const EnemySpawnBehavior& minionSpawnBehavior, const EnemySpawnBehavior& giantSpawnBevaior);
+	EnemySpawner(const EnemySpawnBehavior& spawnBehavior);
 	void Update(float dt);
-	void DrawEnemies(sf::RenderTarget& target);
-	void SetMinionSpawnPosition(sf::Vector2f position) { minionSpawnBehavior.prototype->SetPosition(position); }
-	void SetGiantSpawnPosition(sf::Vector2f position) { giantSpawnBehavior.prototype->SetPosition(position); }
-	auto& GetEnemies() { return enemies; }
+	static void UpdateAllEnemies(float dt);
+	static void DrawEnemies(sf::RenderTarget& target);
+	void SetSpawnPosition(sf::Vector2f position) { spawnBehavior.prototype->SetPosition(position); }
+	static auto& GetEnemies() { 
+		static std::vector<std::unique_ptr<Enemy>> allEnemies;
+		return allEnemies; 
+	}
 private:
-	void SpawnEnemy(const EnemySpawnBehavior& spawnBehavior);
+	void SpawnEnemy();
 private:
-	EnemySpawnBehavior minionSpawnBehavior;
-	EnemySpawnBehavior giantSpawnBehavior;
-	float timeSinceLastSpawnedMinion;
-	float timeSinceLastSpawnedGiant;
-	std::vector<std::unique_ptr<Enemy>> enemies;
+	EnemySpawnBehavior spawnBehavior;
+	float timeSinceLastSpawnedEnemy;
 };

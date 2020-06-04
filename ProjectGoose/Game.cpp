@@ -8,17 +8,22 @@ Game::Game(sf::RenderWindow& window)
 	:wnd(window),
 	player(wnd),
 	background("Assets/Textures/background.jpg", wnd),
+	loseBackgroundTexture(ResourceHolder::GetTexture("Assets/Textures/menuBackground.jpg")),
 	minionPrototype(player.GetPosition()),
 	giantPrototype(player.GetPosition(), {}, 0.30f, 75.0f, 3),
-	zombieSpawner(EnemySpawner::EnemySpawnBehavior( &minionPrototype ), EnemySpawner::EnemySpawnBehavior( &giantPrototype, 5.0f, 6.0f ))
+	zombieMinionSpawner(EnemySpawner::EnemySpawnBehavior(&minionPrototype)),
+	zombieGiantSpawner(EnemySpawner::EnemySpawnBehavior(&giantPrototype, 5.0f, 6.0f))
 {
 	backgroundMusic.openFromFile("Assets/Sounds/bgmusic.ogg");
 	backgroundMusic.setLoop(true);
 	backgroundMusic.play();
+	loseBackground.setTexture(loseBackgroundTexture);
 	SetWindowView();
+	loseBackground.setScale(background.Width() / loseBackground.getLocalBounds().width,
+		background.Height() / loseBackground.getLocalBounds().height);
 	std::cout << wnd.getView().getSize().x + 10.0f << '\n';
-	zombieSpawner.SetMinionSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 125.0f });
-	zombieSpawner.SetGiantSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 200.0f });
+	zombieMinionSpawner.SetSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 125.0f });
+	zombieGiantSpawner.SetSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 200.0f });
 }
 
 void Game::SetWindowView()
@@ -32,7 +37,7 @@ void Game::SetWindowView()
 
 void Game::DetectCollisions()
 {
-	player.DetectCollisions(zombieSpawner);
+	player.DetectCollisions();
 }
 
 
@@ -49,24 +54,32 @@ void Game::Go()
 
 void Game::Update()
 {
-	if (player.IsDead())
+	if (!player.IsDead())
 	{
-		std::cout << "You suck balls\n";
+		dt = frameTimer.restart().asSeconds();
+
+		timeSinceLastCheckedCollision += dt;
+
+		player.Update(dt);
+		background.Update(dt);
+		zombieMinionSpawner.Update(dt);
+		zombieGiantSpawner.Update(dt);
+		EnemySpawner::UpdateAllEnemies(dt);
+		ZombieProjectile::UpdateAll(dt);
 	}
-	dt = frameTimer.restart().asSeconds();
-
-	timeSinceLastCheckedCollision += dt;
-
-	player.Update(dt);
-	background.Update(dt);
-	zombieSpawner.Update(dt);
-	ZombieProjectile::UpdateAll(dt);
 }
 
 void Game::Draw()
 {
-	wnd.draw(background);
-	zombieSpawner.DrawEnemies(wnd);
-	ZombieProjectile::DrawAll(wnd);
-	wnd.draw(player);
+	if (!player.IsDead())
+	{
+		wnd.draw(background);
+		EnemySpawner::DrawEnemies(wnd);
+		ZombieProjectile::DrawAll(wnd);
+		wnd.draw(player);
+	}
+	else
+	{
+		wnd.draw(loseBackground);
+	}
 }
