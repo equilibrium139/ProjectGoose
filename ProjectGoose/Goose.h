@@ -28,9 +28,11 @@ public:
 	void DetectCollisions(EnemySpawner& zombieSpawner);
 	sf::FloatRect GetBounds() const { return sprite.getGlobalBounds(); }
 	const sf::Vector2f& GetPosition() const { return sprite.getPosition(); }
+	bool IsDead() const { return hitPoints <= 0; }
+	void PlayBlinkEffect();
 private:
 	void ClampToWindow();
-	void TakeDamage() { --hitPoints; std::cout << "Collided with zombie\n"; }
+	void TakeDamage();
 private:
 	const static SpriteSheet& sheet()
 	{
@@ -43,4 +45,7 @@ private:
 	Shooter shooter;
 	float speed;
 	int hitPoints;
+	bool immune = false;
+	float immunityDuration = 1.25f;
+	float immunityTimer = 0.0f;
 };

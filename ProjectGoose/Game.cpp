@@ -49,6 +49,10 @@ void Game::Go()
 
 void Game::Update()
 {
+	if (player.IsDead())
+	{
+		std::cout << "You suck balls\n";
+	}
 	dt = frameTimer.restart().asSeconds();
 
 	timeSinceLastCheckedCollision += dt;
