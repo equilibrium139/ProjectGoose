@@ -28,10 +28,7 @@ private:
 	ScrollingBackground background;
 	sf::Texture& loseBackgroundTexture;
 	sf::Sprite loseBackground;
-	Zombie minionPrototype;
-	Zombie giantPrototype;
-	EnemySpawner zombieMinionSpawner;
-	EnemySpawner zombieGiantSpawner;
+	std::vector<EnemySpawner> enemySpawners;
 	float collisionCheckInterval = 1.0f / 24.0f; // check for collision 24 times a second
 	float timeSinceLastCheckedCollision = std::numeric_limits<float>::max();
 };

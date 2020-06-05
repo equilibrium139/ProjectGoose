@@ -8,26 +8,17 @@
 #include "ResourceHolder.h"
 #include "Enemy.h"
 
-//Class for spawning and managing minion zombies and giant zombies
+//Class for spawning and managing enemies
 class EnemySpawner
 {
 public:
+	EnemySpawner(std::unique_ptr<Enemy>&& proto, float spawnInterval = 3.0f, float spawnStartTime = 0.0f);
 
-	struct EnemySpawnBehavior
-	{
-		EnemySpawnBehavior(Enemy* proto, float spawnInterval = 3.0f,
-			float spawnStartTime = 0.0f)
-			:prototype(proto), spawnInterval(spawnInterval), spawnStartTime(spawnStartTime) {}
-		Enemy* prototype;
-		float spawnInterval = 3.0f;
-		float spawnStartTime = 0.0f;
-	};
-
-	EnemySpawner(const EnemySpawnBehavior& spawnBehavior);
 	void Update(float dt);
+	void SetSpawnPosition(sf::Vector2f position) { prototype->SetPosition(position); }
+
 	static void UpdateAllEnemies(float dt);
 	static void DrawEnemies(sf::RenderTarget& target);
-	void SetSpawnPosition(sf::Vector2f position) { spawnBehavior.prototype->SetPosition(position); }
 	static auto& GetEnemies() { 
 		static std::vector<std::unique_ptr<Enemy>> allEnemies;
 		return allEnemies; 
@@ -35,6 +26,7 @@ public:
 private:
 	void SpawnEnemy();
 private:
-	EnemySpawnBehavior spawnBehavior;
+	std::unique_ptr<Enemy> prototype;
+	float spawnInterval = 3.0f;
 	float timeSinceLastSpawnedEnemy;
 };

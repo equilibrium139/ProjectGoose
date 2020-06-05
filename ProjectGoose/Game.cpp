@@ -8,22 +8,28 @@ Game::Game(sf::RenderWindow& window)
 	:wnd(window),
 	player(wnd),
 	background("Assets/Textures/background.jpg", wnd),
-	loseBackgroundTexture(ResourceHolder::GetTexture("Assets/Textures/menuBackground.jpg")),
-	minionPrototype(player.GetPosition()),
-	giantPrototype(player.GetPosition(), {}, 0.30f, 75.0f, 3),
-	zombieMinionSpawner(EnemySpawner::EnemySpawnBehavior(&minionPrototype)),
-	zombieGiantSpawner(EnemySpawner::EnemySpawnBehavior(&giantPrototype, 5.0f, 6.0f))
+	loseBackgroundTexture(ResourceHolder::GetTexture("Assets/Textures/menuBackground.jpg"))
 {
 	backgroundMusic.openFromFile("Assets/Sounds/bgmusic.ogg");
 	backgroundMusic.setLoop(true);
+	backgroundMusic.setVolume(0.0f);
 	backgroundMusic.play();
 	loseBackground.setTexture(loseBackgroundTexture);
 	SetWindowView();
 	loseBackground.setScale(background.Width() / loseBackground.getLocalBounds().width,
 		background.Height() / loseBackground.getLocalBounds().height);
-	std::cout << wnd.getView().getSize().x + 10.0f << '\n';
-	zombieMinionSpawner.SetSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 125.0f });
-	zombieGiantSpawner.SetSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 200.0f });
+
+	//Zombie minion
+	sf::Vector2f minionSpawnPos(wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 125.0f);
+	enemySpawners.emplace_back(std::make_unique<Zombie>(player.GetPosition(), minionSpawnPos));
+
+	// Zombie giant
+	sf::Vector2f giantSpawnPos(wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 200.0f);
+	enemySpawners.emplace_back(std::make_unique<Zombie>(player.GetPosition(), 
+		giantSpawnPos, 0.3f, 75.0f, 3), 5.0f, 6.0f);
+
+	// zombieMinionSpawner.SetSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 125.0f });
+	// zombieGiantSpawner.SetSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 200.0f });
 }
 
 void Game::SetWindowView()
@@ -32,7 +38,6 @@ void Game::SetWindowView()
 	float bgHeight = background.Height();
 	sf::View bgView(sf::Vector2f(bgWidth / 2.0f, bgHeight / 2.0f), sf::Vector2f(bgWidth, bgHeight));
 	wnd.setView(bgView);
-	std::cout << wnd.getView().getSize().x << '\n';
 }
 
 void Game::DetectCollisions()
@@ -62,8 +67,10 @@ void Game::Update()
 
 		player.Update(dt);
 		background.Update(dt);
-		zombieMinionSpawner.Update(dt);
-		zombieGiantSpawner.Update(dt);
+		for (auto& spawner : enemySpawners)
+		{
+			spawner.Update(dt);
+		}
 		EnemySpawner::UpdateAllEnemies(dt);
 		ZombieProjectile::UpdateAll(dt);
 	}

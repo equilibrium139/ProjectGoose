@@ -1,16 +1,15 @@
 #include "EnemySpawner.h"
-#include <iostream>
 
-EnemySpawner::EnemySpawner(const EnemySpawnBehavior& spawnBehavior)
-	:spawnBehavior(spawnBehavior), 
-	timeSinceLastSpawnedEnemy(spawnBehavior.spawnInterval - spawnBehavior.spawnStartTime)
+EnemySpawner::EnemySpawner(std::unique_ptr<Enemy>&& proto, float spawnInterval, float spawnStartTime)
+	:prototype(std::move(proto)), spawnInterval(spawnInterval), 
+	timeSinceLastSpawnedEnemy(spawnInterval - spawnStartTime)
 {
 }
 
 void EnemySpawner::Update(float dt)
 {
 	timeSinceLastSpawnedEnemy += dt;
-	if (timeSinceLastSpawnedEnemy >= spawnBehavior.spawnInterval)
+	if (timeSinceLastSpawnedEnemy >= spawnInterval)
 	{
 		SpawnEnemy();
 		timeSinceLastSpawnedEnemy = 0.0f;
@@ -39,5 +38,5 @@ void EnemySpawner::DrawEnemies(sf::RenderTarget& target)
 
 void EnemySpawner::SpawnEnemy()
 {
-	GetEnemies().emplace_back(spawnBehavior.prototype->Clone());
+	GetEnemies().emplace_back(prototype->Clone());
 }
