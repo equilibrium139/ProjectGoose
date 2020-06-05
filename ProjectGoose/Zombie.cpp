@@ -53,11 +53,6 @@ void Zombie::Update(float dt)
 		}
 		break;
 	}
-
-	if (GetBounds().left + GetBounds().width < 0)
-	{
-		state = State::Dead;
-	}
 }
 
 void Zombie::draw(sf::RenderTarget& target, sf::RenderStates states) const

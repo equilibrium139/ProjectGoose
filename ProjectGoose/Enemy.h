@@ -24,7 +24,6 @@ public:
 			state = State::Dying;
 		}
 	}
-	virtual void SetPosition(sf::Vector2f newPos) = 0;
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override = 0;
 	State GetState() { return state; }
 	bool IsDead() const { return hitPoints < 0; }

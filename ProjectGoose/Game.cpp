@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "ZombieProjectile.h"
+#include "ZombieBird.h"
 
 Game::Game(sf::RenderWindow& window)
 	:wnd(window),
@@ -28,6 +29,10 @@ Game::Game(sf::RenderWindow& window)
 	enemySpawners.emplace_back(std::make_unique<Zombie>(player.GetPosition(), 
 		giantSpawnPos, 0.3f, 75.0f, 3), 5.0f, 6.0f);
 
+	//Zombie bird
+	sf::Vector2f birdSpawnPos(wnd.getView().getSize().x + 20.0f, 200.0f);
+	enemySpawners.emplace_back(std::make_unique<ZombieBird>(player.GetPosition(), birdSpawnPos,
+		0.1f, 100.0f, 1, true));
 	// zombieMinionSpawner.SetSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 125.0f });
 	// zombieGiantSpawner.SetSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 200.0f });
 }
@@ -71,7 +76,7 @@ void Game::Update()
 		{
 			spawner.Update(dt);
 		}
-		EnemySpawner::UpdateAllEnemies(dt);
+		EnemySpawner::UpdateAllEnemies(dt, wnd);
 		ZombieProjectile::UpdateAll(dt);
 	}
 }

@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 
-#include <SFML/System.hpp>
+#include <SFML/Graphics.hpp>
 
 #include "ResourceHolder.h"
 #include "Enemy.h"
@@ -15,9 +15,8 @@ public:
 	EnemySpawner(std::unique_ptr<Enemy>&& proto, float spawnInterval = 3.0f, float spawnStartTime = 0.0f);
 
 	void Update(float dt);
-	void SetSpawnPosition(sf::Vector2f position) { prototype->SetPosition(position); }
 
-	static void UpdateAllEnemies(float dt);
+	static void UpdateAllEnemies(float dt, const sf::RenderWindow& window);
 	static void DrawEnemies(sf::RenderTarget& target);
 	static auto& GetEnemies() { 
 		static std::vector<std::unique_ptr<Enemy>> allEnemies;

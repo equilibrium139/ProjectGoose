@@ -16,13 +16,18 @@ void EnemySpawner::Update(float dt)
 	}
 }
 
-void EnemySpawner::UpdateAllEnemies(float dt)
+// Update enemies and remove them from the list if dead or if they're off the window
+void EnemySpawner::UpdateAllEnemies(float dt, const sf::RenderWindow& window)
 {
+	auto windowSize = window.getView().getSize();
+	sf::FloatRect windowBounds(0.0f, 0.0f, windowSize.x, windowSize.y);
+
 	GetEnemies().erase(
 		std::remove_if(GetEnemies().begin(), GetEnemies().end(),
-			[dt](auto& enemy) {
+			[dt, &windowBounds](auto& enemy) {
 				enemy->Update(dt);
-				return enemy->GetState() == Enemy::State::Dead;
+				return enemy->GetState() == Enemy::State::Dead || 
+					!windowBounds.intersects(enemy->GetBounds());
 			}),
 		GetEnemies().end()
 				);

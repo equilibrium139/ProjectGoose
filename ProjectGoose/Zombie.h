@@ -17,7 +17,6 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	sf::FloatRect GetBounds() const override { return sprite.getGlobalBounds(); }
 	std::unique_ptr<Enemy> Clone() const override { return std::make_unique<Zombie>(playerPosition, sprite.getPosition(), sprite.getScale().x, speed, GetHitpoints()); }
-	void SetPosition(sf::Vector2f newPos) override { sprite.setPosition(newPos); }
 private:
 	bool CoinFlip() const
 	{
