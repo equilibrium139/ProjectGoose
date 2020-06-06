@@ -44,7 +44,6 @@ void ZombieBird::Update(float dt)
 
 std::unique_ptr<Enemy> ZombieBird::Clone() const
 {
-	std::cout << "Cloning\n";
 	return std::make_unique<ZombieBird>(playerPos, sprite.getPosition(), sprite.getScale().x, 
-		speed, targetPlayer);
+		speed, hitPoints, targetPlayer);
 }

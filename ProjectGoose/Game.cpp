@@ -13,7 +13,6 @@ Game::Game(sf::RenderWindow& window)
 {
 	backgroundMusic.openFromFile("Assets/Sounds/bgmusic.ogg");
 	backgroundMusic.setLoop(true);
-	backgroundMusic.setVolume(0.0f);
 	backgroundMusic.play();
 	loseBackground.setTexture(loseBackgroundTexture);
 	SetWindowView();
@@ -33,8 +32,6 @@ Game::Game(sf::RenderWindow& window)
 	sf::Vector2f birdSpawnPos(wnd.getView().getSize().x + 20.0f, 200.0f);
 	enemySpawners.emplace_back(std::make_unique<ZombieBird>(player.GetPosition(), birdSpawnPos,
 		0.1f, 100.0f, 1, true));
-	// zombieMinionSpawner.SetSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 125.0f });
-	// zombieGiantSpawner.SetSpawnPosition({ wnd.getView().getSize().x + 20.0f, wnd.getView().getSize().y - 200.0f });
 }
 
 void Game::SetWindowView()

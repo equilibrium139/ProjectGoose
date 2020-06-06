@@ -33,7 +33,6 @@ protected:
 	Enemy(int hp)
 		:hitPoints(hp) {}
 	State state = State::Moving;
-private:
 	int hitPoints;
 };
 

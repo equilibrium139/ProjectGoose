@@ -162,6 +162,5 @@ void Goose::TakeDamage()
 	{
 		--hitPoints;
 		immune = true;
-		std::cout << "Took damage\n";
 	}
 }
