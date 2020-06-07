@@ -9,11 +9,13 @@ Game::Game(sf::RenderWindow& window)
 	:wnd(window),
 	player(wnd),
 	background("Assets/Textures/background.jpg", wnd),
-	loseBackgroundTexture(ResourceHolder::GetTexture("Assets/Textures/menuBackground.jpg"))
+	loseBackgroundTexture(ResourceHolder::GetTexture("Assets/Textures/menuBackground.jpg")),
+	play(wnd, "Play", { 600, 400 }, sf::Color::Red)
 {
 	backgroundMusic.openFromFile("Assets/Sounds/bgmusic.ogg");
 	backgroundMusic.setLoop(true);
 	backgroundMusic.play();
+	play.SetOnClick([this]() { gameStarted = true; });
 	loseBackground.setTexture(loseBackgroundTexture);
 	SetWindowView();
 	loseBackground.setScale(background.Width() / loseBackground.getLocalBounds().width,
@@ -31,7 +33,7 @@ Game::Game(sf::RenderWindow& window)
 	//Zombie bird
 	sf::Vector2f birdSpawnPos(wnd.getView().getSize().x + 20.0f, 200.0f);
 	enemySpawners.emplace_back(std::make_unique<ZombieBird>(player.GetPosition(), birdSpawnPos,
-		0.1f, 100.0f, 1, true));
+		0.1f, 100.0f, 1, true), 6.0f, 20.0f);
 }
 
 void Game::SetWindowView()
@@ -47,7 +49,6 @@ void Game::DetectCollisions()
 	player.DetectCollisions();
 }
 
-
 void Game::Go()
 {
 	if (timeSinceLastCheckedCollision > collisionCheckInterval)
@@ -61,7 +62,7 @@ void Game::Go()
 
 void Game::Update()
 {
-	if (!player.IsDead())
+	if (gameStarted)
 	{
 		dt = frameTimer.restart().asSeconds();
 
@@ -76,19 +77,23 @@ void Game::Update()
 		EnemySpawner::UpdateAllEnemies(dt, wnd);
 		ZombieProjectile::UpdateAll(dt);
 	}
+	else
+	{
+		play.Update();
+	}
 }
 
 void Game::Draw()
 {
-	if (!player.IsDead())
+	if (gameStarted)
 	{
 		wnd.draw(background);
-		EnemySpawner::DrawEnemies(wnd);
+		EnemySpawner::DrawAllEnemies(wnd);
 		ZombieProjectile::DrawAll(wnd);
 		wnd.draw(player);
 	}
 	else
 	{
-		wnd.draw(loseBackground);
+		wnd.draw(play);
 	}
 }

@@ -26,7 +26,7 @@ public:
 	}
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override = 0;
 	State GetState() { return state; }
-	bool IsDead() const { return hitPoints < 0; }
+	bool IsDead() const { return hitPoints <= 0; }
 	int GetHitpoints() const { return hitPoints; }
 	virtual ~Enemy() = default;
 protected:

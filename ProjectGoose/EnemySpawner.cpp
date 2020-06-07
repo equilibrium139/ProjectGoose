@@ -33,7 +33,7 @@ void EnemySpawner::UpdateAllEnemies(float dt, const sf::RenderWindow& window)
 				);
 }
 
-void EnemySpawner::DrawEnemies(sf::RenderTarget& target)
+void EnemySpawner::DrawAllEnemies(sf::RenderTarget& target)
 {
 	for(const auto& enemy: GetEnemies())
 	{

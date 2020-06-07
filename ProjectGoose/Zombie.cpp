@@ -3,16 +3,11 @@
 #include "Zombie.h"
 #include "ZombieProjectile.h"
 
-const SpriteSheet Zombie::maleWalk = SpriteSheet(ResourceHolder::GetTexture("Assets/Textures/maleZombieWalk.png"), 10, 3, 4);
-const SpriteSheet Zombie::maleDeath = SpriteSheet(ResourceHolder::GetTexture("Assets/Textures/maleZombieDeath.png"), 12, 1, 12);
-const SpriteSheet Zombie::maleAttack = SpriteSheet(ResourceHolder::GetTexture("Assets/Textures/maleZombieAttack.png"), 8, 1, 8);
-const SpriteSheet Zombie::femaleWalk = SpriteSheet(ResourceHolder::GetTexture("Assets/Textures/femaleZombieWalk.png"), 10, 1, 10);
-const SpriteSheet Zombie::femaleDeath = SpriteSheet(ResourceHolder::GetTexture("Assets/Textures/femaleZombieDeath.png"), 12, 1, 12);
-const SpriteSheet Zombie::femaleAttack = SpriteSheet(ResourceHolder::GetTexture("Assets/Textures/femaleZombieAttack.png"), 8, 1, 8);
-
-Zombie::Zombie(const sf::Vector2f& playerPosition, sf::Vector2f position, float scale, float speed, int hitPoints)
-	: Enemy(hitPoints), walk(sprite, male ? maleWalk : femaleWalk, 10.0f, true, true), death(sprite, male ? maleDeath : femaleDeath, 10.0f, false, true),
-	  attack(sprite, male ? maleAttack : femaleAttack, 10.0f, false, true), playerPosition(playerPosition), speed(speed)
+Zombie::Zombie(const sf::Vector2f& playerPosition, sf::Vector2f position, float scale, float speed, int hitPoints, float attackCooldown)
+	: Enemy(hitPoints), walk(sprite, male ? maleWalk() : femaleWalk(), 10.0f, true, true), 
+			death(sprite, male ? maleDeath() : femaleDeath(), 10.0f, false, true),
+			attack(sprite, male? maleAttack() : femaleAttack(), 10.0f, false, true), 
+			playerPosition(playerPosition), speed(speed), attackCooldown(attackCooldown)
 {
 	sprite.setScale(scale, scale);
 	auto bounds = sprite.getLocalBounds();
@@ -78,4 +73,40 @@ void Zombie::LookAtPlayer(Animation& current)
 	{
 		current.SetFlip(true);
 	}
+}
+
+const SpriteSheet& Zombie::maleWalk()
+{
+	static SpriteSheet walk = SpriteSheet(ResourceHolder::GetTexture("Assets/Textures/maleZombieWalk.png"), 10, 3, 4);
+	return walk;
+}
+
+const SpriteSheet& Zombie::maleDeath()
+{
+	static SpriteSheet death = SpriteSheet(ResourceHolder::GetTexture("Assets/Textures/maleZombieDeath.png"), 12, 1, 12);
+	return death;
+}
+
+const SpriteSheet& Zombie::maleAttack()
+{
+	static SpriteSheet attack = SpriteSheet(ResourceHolder::GetTexture("Assets/Textures/maleZombieAttack.png"), 8, 1, 8);
+	return attack;
+}
+
+const SpriteSheet& Zombie::femaleWalk()
+{
+	static SpriteSheet walk = SpriteSheet(ResourceHolder::GetTexture("Assets/Textures/femaleZombieWalk.png"), 10, 1, 10);
+	return walk;
+}
+
+const SpriteSheet& Zombie::femaleDeath()
+{
+	static SpriteSheet death = SpriteSheet(ResourceHolder::GetTexture("Assets/Textures/femaleZombieDeath.png"), 12, 1, 12);
+	return death;
+}
+
+const SpriteSheet& Zombie::femaleAttack()
+{
+	static SpriteSheet attack = SpriteSheet(ResourceHolder::GetTexture("Assets/Textures/femaleZombieAttack.png"), 8, 1, 8);
+	return attack;
 }

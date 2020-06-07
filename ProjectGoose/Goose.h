@@ -18,7 +18,7 @@ class Goose : public sf::Drawable
 {
 public:
 	// Goose(const sf::RenderWindow& window);
-	Goose(const sf::RenderWindow& window, sf::Vector2f position = { 0.0f, 0.0f }, float scale = 0.1f, float speed = 150.0f, int hitPoints = 3);
+	Goose(const sf::RenderWindow& window, sf::Vector2f position = { 0.0f, 0.0f }, float scale = 0.1f, float speed = 200.0f, int hitPoints = 3);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	void Update(float dt);
 	void ProcessMovementInput(float dt);

@@ -7,12 +7,19 @@
 #include "ResourceHolder.h"
 #include "Zombie.h"
 #include "EnemySpawner.h"
+#include "Button.h"
 
 class Game
 {
 public:
 	Game(sf::RenderWindow& window);
 	void Go();
+	enum class Level
+	{
+		Menu,
+		Level1,
+		NLEVELS
+	};
 private:
 	void Update();
 	void Draw();
@@ -31,4 +38,6 @@ private:
 	std::vector<EnemySpawner> enemySpawners;
 	float collisionCheckInterval = 1.0f / 24.0f; // check for collision 24 times a second
 	float timeSinceLastCheckedCollision = std::numeric_limits<float>::max();
+	bool gameStarted = false;
+	Button play;
 };

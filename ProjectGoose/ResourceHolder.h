@@ -11,4 +11,5 @@ public:
 	ResourceHolder() = delete;
 	static sf::Texture& GetTexture(const std::string& path);
 	static sf::SoundBuffer& GetSoundBuffer(const std::string& path);
+	static sf::Font& GetFont(const std::string& path);
 };

@@ -17,7 +17,7 @@ public:
 	void Update(float dt);
 
 	static void UpdateAllEnemies(float dt, const sf::RenderWindow& window);
-	static void DrawEnemies(sf::RenderTarget& target);
+	static void DrawAllEnemies(sf::RenderTarget& target);
 	static auto& GetEnemies() { 
 		static std::vector<std::unique_ptr<Enemy>> allEnemies;
 		return allEnemies; 

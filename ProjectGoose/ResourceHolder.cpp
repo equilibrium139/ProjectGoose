@@ -35,3 +35,20 @@ sf::SoundBuffer& ResourceHolder::GetSoundBuffer(const std::string& path)
 		return newSoundBuffer;
 	}
 }
+
+sf::Font& ResourceHolder::GetFont(const std::string& path)
+{
+	static std::unordered_map<std::string, sf::Font> fonts;
+
+	auto pair = fonts.find(path);
+	if (pair != fonts.end())
+	{
+		return pair->second;
+	}
+	else
+	{
+		auto& newFont = fonts[path];
+		newFont.loadFromFile(path);
+		return newFont;
+	}
+}
